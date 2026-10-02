@@ -201,6 +201,7 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
   font-size:.82rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
 }
 .intro{ max-width:60ch; color:var(--ink); }
+.intro + .app-card{ margin-top:20px; }
 .muted{ color:var(--muted); }
 
 /* Pie Timers card */
