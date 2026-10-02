@@ -159,7 +159,7 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
           mask-image:radial-gradient(closest-side, #000 74%, transparent 100%);
 }
 .tagline{
-  margin:clamp(4px, 1vw, 12px) auto 14px;
+  margin:clamp(4px, 1vw, 12px) auto 28px;
   font-size:clamp(1.6rem, 1.05rem + 2.6vw, 2.6rem);
   font-weight:600; letter-spacing:-.018em; line-height:1.15;
   color:var(--ti);
