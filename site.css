@@ -308,3 +308,11 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
 /* The name is mixed case always, even inside an uppercase label
    (brand/README.md in pie-timers-app). */
 .eyebrow .name{ text-transform:none; letter-spacing:.04em; }
+
+/* Event card list. Plain disc bullets on purpose: .ticks belongs to
+   the Pie Timers card only. Keep the default list-style, because
+   list-style:none stops Safari and VoiceOver announcing a list. The
+   bottom margin does the job of .card p + p, which cannot reach a
+   paragraph that follows a list. */
+.card-list{ margin:.4em 0 .8em; padding-left:1.25em; }
+.card-list li + li{ margin-top:.25em; }
