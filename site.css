@@ -294,6 +294,7 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
 .foot a{ color:var(--link); }
 .foot .promise{ color:var(--ti); font-weight:600; font-size:1.05rem; margin-bottom:.4em; }
 .foot-links{ display:flex; flex-wrap:wrap; gap:8px 22px; margin:18px 0; }
+.foot-social{ margin-top:-6px; }
 .foot .fine{ margin:0; font-size:.88rem; }
 
 /* ───────────────────────── 404 ───────────────────────── */
