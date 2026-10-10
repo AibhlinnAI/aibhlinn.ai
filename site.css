@@ -316,3 +316,9 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
    paragraph that follows a list. */
 .card-list{ margin:.4em 0 .8em; padding-left:1.25em; }
 .card-list li + li{ margin-top:.25em; }
+
+/* What we do: each card's link sits on the card's bottom edge, so the
+   four links line up across a row however long each description is.
+   Only these cards: the promise cards have no link. */
+.grid--four .card{ display:flex; flex-direction:column; }
+.grid--four .card .card-link{ margin-top:auto; padding-top:.8em; }
