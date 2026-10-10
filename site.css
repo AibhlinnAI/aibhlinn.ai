@@ -322,3 +322,8 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
    Only these cards: the promise cards have no link. */
 .grid--four .card{ display:flex; flex-direction:column; }
 .grid--four .card .card-link{ margin-top:auto; padding-top:.8em; }
+
+/* Brand kit: how to say the name, given its own line so it is easy to
+   find, and spelt exactly as Mal gave it. */
+.say{ margin:0 0 .4em; font-size:1.1rem; color:var(--ink); }
+.say strong{ color:var(--heading); letter-spacing:.02em; }
