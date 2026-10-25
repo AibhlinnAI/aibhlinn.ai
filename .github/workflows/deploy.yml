@@ -53,6 +53,17 @@ jobs:
           fi
           echo "No ad or tracking dependencies found."
 
+      # The ABN is one identifier: with plain spaces a narrow screen can
+      # wrap it across two lines. Published copies use &nbsp; between its
+      # parts. (The JSON-LD taxID is data, never displayed, so it is left.)
+      - name: Check the ABN never wraps
+        run: |
+          if grep -rnE --exclude-dir=.git --exclude-dir=.github 'ABN[[:space:]]+[0-9]' . --include='*.html'; then
+            echo "::error::Write the ABN with &nbsp; between its parts, so it never splits across lines."
+            exit 1
+          fi
+          echo "Every published ABN is held together."
+
   deploy:
     needs: guard
     runs-on: ubuntu-latest
