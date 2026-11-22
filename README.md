@@ -40,9 +40,10 @@ with far less reason to break them:
   - **Publish this page after the app, never before.** The advert links to
     `pietimers.aibhlinn.ai/foundation.html`. Until the `pie-timers-app`
     branch that carries the Black Friday Launch Offer is merged and live,
-    that page still describes the October offer. The order is: the SQL, the
-    `paddle-webhook` function, the test purchase (Test A), the app pages,
-    then this site (`pie-timers-app/DEPLOY.md` 5.6). Open the live
+    that page still describes the October offer. This site goes last, after
+    everything in `pie-timers-app/DEPLOY.md` 5.6, which keeps the one list
+    of steps and their order (it is not copied here, because a copy goes
+    stale). Open the live
     `foundation.html` and check it says Black Friday Launch Offer before
     merging here.
   - "Pay nothing until 2027" is only true with its condition. Keep it right
@@ -62,13 +63,14 @@ with far less reason to break them:
     is still 31 December everywhere to the west, so the date always carries
     "(Adelaide time)".
   - The page has no JavaScript, so it cannot count places or hide the offer.
-    If Foundation fills before the end of 31 December, remove by hand the
-    Foundation paragraph in the offer block of `index.html` and the second
-    sentence of its closing paragraph, and leave the rest. The whole advert
-    comes down on 1 January 2027: remove the offer line in the hero and
-    the whole offer block in the Pie Timers card. Each is marked with an
-    HTML comment. The `.offer` and `.hero-offer` rules in `site.css` can go
-    with them.
+    It does not need to: **the advert retires itself**, and nobody has to be
+    available on 1 January 2027. See "The advert retires itself" below.
+  - The hero line, the heading of the offer block and the Foundation
+    paragraph each say which day the offer ends ("Until the end of
+    31 December 2026 (Adelaide time): ..."), and nothing in the block goes
+    false if it lingers for any reason: the hook and its condition are
+    about the first payment, and that rule has no cut-off. Keep it that
+    way: never write "on now", "this month" or "ends soon".
   - 5 December 2026 is not on this page and must not be. The only thing
     that still ends then is the free trial of a Pie Timers account made
     before 22 November 2026, which the app's own pages explain.
@@ -77,6 +79,82 @@ with far less reason to break them:
   what lets this page show a price and a dated invitation to subscribe,
   which the app itself must never show inside Google Play. Keep it true: do
   not add a link to `aibhlinn.ai` anywhere the Play app can reach.
+
+## The advert retires itself
+
+Mal asked for this on 22 Nov 2026: nothing about the offer may need a
+person on 1 January 2027.
+
+**How.** In `index.html` the advert sits between marker comments, each on a
+line of its own:
+
+- `<!-- OFFER:START -->` and `<!-- OFFER:END -->`, three times: around the
+  offer line in the hero, around a note to maintainers above the apps
+  section, and around the offer block in the Pie Timers card.
+- `<!-- FOUNDATION:START -->` and `<!-- FOUNDATION:END -->`, once, inside
+  the offer block: around the Foundation paragraph. Everything the advert
+  says about Foundation is in that one paragraph.
+
+`.github/workflows/retire-offer.yml` runs on a schedule: every hour from
+13:40 UTC on 31 December to the end of 3 January, then once a day for the
+rest of January. Each run reads the clock itself. Before the end of
+31 December 2026, Adelaide time (the instant `2026-12-31T13:30:00Z`), it
+does nothing. From then on it deletes everything from each START marker to
+its END marker, markers included, commits that to `main` as
+`github-actions[bot]`, and starts the Deploy workflow. Once the markers are
+gone there is nothing to do, so every later run ends cleanly.
+
+**Why it starts the deploy itself.** `deploy.yml` runs on a push to `main`,
+but a push made with a workflow's own token does not trigger other
+workflows. So the retire workflow runs `gh workflow run deploy.yml`, which
+GitHub does allow, and which `deploy.yml` already accepts (it is the
+"redeploy by hand" button). The deploy runs exactly as it does for a
+person, guard job included. `deploy.yml` itself is not changed.
+
+**It refuses rather than half-do the job.** If a marker is missing its
+partner, shares its line with anything else, or sits around half an
+element, the run fails, the file is left exactly as it was, and the run
+goes red in the Actions tab. The page is checked to be well formed after
+the removal before anything is committed.
+
+**To run it by hand**: GitHub, this repo, **Actions**, **Retire the launch
+offer advert**, **Run workflow**, branch `main`. Two tick boxes:
+
+- **foundation_only**: all 100 Foundation places have gone before the end
+  of 31 December. Takes down only the Foundation paragraph, now. The rest
+  of the advert stays, because a full Foundation does not end "Pay nothing
+  until 2027". It comes down by itself when the offer closes.
+- **force**: take the whole advert down now, whatever the date.
+
+With neither box ticked, a hand run does what a scheduled run would do at
+that moment: nothing before the close, the whole advert after it.
+
+**What has to be true for it to work.** Check these before relying on it:
+
+- The workflow file is on `main`. GitHub only runs schedules from the
+  default branch.
+- The repo has had a commit in the last 60 days. GitHub switches scheduled
+  workflows off in a repo that has been quiet for longer. Merging this
+  branch in late November 2026 is inside that window.
+- `main` accepts a push from `github-actions[bot]`. If a branch protection
+  rule requires a pull request, the push step fails and the advert stays
+  up. That is the case the self-dating wording is there for.
+- Nobody has moved or reworded a marker. They must stay exactly as written.
+
+**Afterwards.** The `.offer` and `.hero-offer` rules in `site.css` style
+nothing once the advert is gone. Delete them, and this section, whenever
+someone is next here. No date forces it. The workflow file can go at the
+same time.
+
+**If the closing day moves**, change `CLOSES` and the cron lines in
+`retire-offer.yml` and the wording in `index.html`, together with
+`pie-timers-app`.
+
+**Rehearsing it.** The step's Python can be run on a copy of `index.html`
+with the clock overridden, for example
+`RETIRE_OFFER_NOW=2026-12-31T13:30:00+00:00 python3 retire.py index.html`
+after copying the script out of the workflow's heredoc. The workflow itself
+never sets `RETIRE_OFFER_NOW`. Never rehearse on the real file.
 
 ## Colours
 
@@ -99,6 +177,8 @@ pair clears 6.9:1 contrast.
 | `og-image.jpg` | 1200 × 630 link-preview image (WhatsApp, LinkedIn, Teams, Discord) |
 | `favicon.ico`, `apple-touch-icon.png` | Tab and home-screen icons from the mark |
 | `CNAME`, `.nojekyll` | The custom domain, and no Jekyll processing |
+| `.github/workflows/deploy.yml` | Publishes the site on every push to `main`, after the guard job |
+| `.github/workflows/retire-offer.yml` | Takes the launch offer advert out of `index.html` after 31 December 2026. Not published: the deploy leaves `.github` out |
 | `fonts/` | Instrument Sans, copied from `pie-timers-app/app/fonts/`, with its licence |
 
 If the logo artwork ever changes, update `pie-timers-app/app/` and here together, then
