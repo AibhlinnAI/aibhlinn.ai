@@ -98,8 +98,14 @@ jobs:
       # elsewhere, because none of them loads anything. Keep every <link>
       # tag on one line, or the second check cannot read it. Forms and
       # media players are refused too: contact is by email, and nothing on
-      # this site moves or plays. Styles live in site.css only, because
-      # each page's Content-Security-Policy blocks inline ones.
+      # this site moves or plays by itself. The one exception is the
+      # work-sample video on services.html. Its tag must sit on one line
+      # and start exactly <video controls preload="none" poster="work/...">,
+      # so it shows its own controls, fetches nothing until someone presses
+      # play, and never starts or repeats by itself. Its file and poster
+      # are held to this repo by the first check here, like every image.
+      # Styles live in site.css only, because each page's
+      # Content-Security-Policy blocks inline ones.
       - name: Refuse third-party loads, embeds and inline styles
         run: |
           set -u
@@ -113,8 +119,20 @@ jobs:
             echo "::error::A link tag other than the canonical one points at another host."
             fail=1
           fi
-          if grep -rniE $X --include='*.html' '<(iframe|embed|object|form|input|button|textarea|select|video|audio|base)([[:space:]>]|$)' .; then
+          if grep -rniE $X --include='*.html' '<(iframe|embed|object|form|input|button|textarea|select|audio|base)([[:space:]>]|$)' .; then
             echo "::error::An embed, form control, media player or base tag was found."
+            fail=1
+          fi
+          if grep -rniE $X --include='*.html' '<video([[:space:]>]|$)' . | grep -vE '^\./services\.html:[0-9]+:[[:space:]]*<video controls preload="none" poster="work/[a-z0-9-]+\.png" '; then
+            echo "::error::A video tag was found outside services.html, or it does not start <video controls preload=\"none\" poster=\"work/...png\">."
+            fail=1
+          fi
+          if grep -rniE $X --include='*.html' '<video[^>]*[[:space:]](autoplay|loop)([[:space:]=>]|$)' .; then
+            echo "::error::A video is set to start or repeat by itself."
+            fail=1
+          fi
+          if [ "$(grep -rhoiE $X --include='*.html' '<video([[:space:]>]|$)' . | wc -l)" -gt 1 ]; then
+            echo "::error::More than one video tag was found. This site has one, on services.html."
             fail=1
           fi
           if grep -rniE $X --include='*.html' "<style|[[:space:]]style[[:space:]]*=" .; then
@@ -122,12 +140,16 @@ jobs:
             fail=1
           fi
           if [ "$fail" -ne 0 ]; then exit 1; fi
-          echo "Nothing is loaded from another host, and there are no embeds, forms or inline styles."
+          echo "Nothing is loaded from another host, and there are no embeds, forms or inline styles. The only media player is the one video on services.html."
 
       - name: Check every page is complete
         run: |
           set -u
           csp="<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'\">"
+          # services.html has the one video, so its policy also lets media
+          # load from this site, and from nowhere else. No other page may
+          # carry that extra permission.
+          csp_video="<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'\">"
           fail=0
           need() {
             # need FILE TEXT WHAT
@@ -139,7 +161,11 @@ jobs:
           pages=$(find . -path ./.git -prune -o -path ./.github -prune -o -name '*.html' -print | sed 's|^\./||' | sort)
           if [ -z "$pages" ]; then echo "::error::No pages found."; exit 1; fi
           for f in $pages; do
-            need "$f" "$csp" "the Content-Security-Policy meta tag, written exactly as on the other pages"
+            if [ "$f" = "services.html" ]; then
+              need "$f" "$csp_video" "the Content-Security-Policy meta tag, written as on the other pages plus media-src 'self'"
+            else
+              need "$f" "$csp" "the Content-Security-Policy meta tag, written exactly as on the other pages"
+            fi
             need "$f" '<meta name="referrer" content="no-referrer">' "the referrer meta tag"
             need "$f" '<title>' "a title"
             if [ "$f" = "404.html" ]; then
@@ -184,7 +210,7 @@ jobs:
                       json.loads(m.group(1))
                   except ValueError as e:
                       errors.append(f'{p}: the JSON-LD block does not parse: {e}')
-              for attr, value in re.findall(r'\b(href|src|srcset)\s*=\s*["\']([^"\']*)["\']', text):
+              for attr, value in re.findall(r'\b(href|src|srcset|poster)\s*=\s*["\']([^"\']*)["\']', text):
                   parts = [c.split()[0] for c in value.split(',') if c.split()] if attr == 'srcset' else [value.strip()]
                   for target in parts:
                       if re.match(r'(?i)(https?:|mailto:)', target):

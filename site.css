@@ -360,16 +360,20 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
 
 /* ───────────────────────── Header links on a narrow phone ───────────────────────── */
 
-/* Below 480px the four links cannot share one row with the mark. Two
-   rows of two beside the mark read more calmly than three and a stray,
-   or the mark alone on a row of its own. */
+/* Below 480px the five links cannot share one row with the mark. A
+   row of three and a row of two read more calmly than two, two and a
+   stray. From about 360px they sit beside the mark. Narrower than that
+   they drop under it, still three and two, and the header is one row
+   taller: three links will not fit beside the mark on a screen that
+   narrow without shrinking the text. */
 @media (max-width:479px){
-  .nav-links{ display:grid; grid-template-columns:repeat(2, max-content); }
+  .nav-links{ display:grid; grid-template-columns:repeat(3, max-content); }
 }
-/* Below 400px the written name on the inner pages no longer fits beside
-   the links, so only the mark shows, as on the home page. The link's
-   aria-label still says the name. */
-@media (max-width:399px){
+/* Below 480px the written name on the inner pages does not fit beside
+   three links (it would need about 460px), so only the mark shows, as
+   on the home page. The link's aria-label still says the name. Keep
+   this breakpoint the same as the one above. */
+@media (max-width:479px){
   .hero--page .brand-name{ display:none; }
 }
 
@@ -550,3 +554,60 @@ h1,h2,h3{ text-wrap:balance; }
   font-weight:500; letter-spacing:-.005em; line-height:1.3;
   color:var(--ti);
 }
+
+/* ============================================================
+   Added with services.html, 22 November 2026.
+   ============================================================ */
+
+/* The top link for the page you are on. Underlined, so colour is not
+   the only sign. */
+.nav-links a[aria-current="page"]{ text-decoration:underline; text-decoration-thickness:2px; text-underline-offset:.35em; }
+
+/* A plain link under a grid of cards, such as the one from "What we do"
+   to the services page. */
+.more{ margin:24px 0 0; }
+.more a{ display:inline-flex; align-items:center; min-height:44px; font-weight:600; }
+
+/* Cards on an inner page: the two opening cards hold an h2 each, which
+   must not take the inner pages' large gap above a heading. */
+.doc .grid{ margin:24px 0; }
+.doc .card h2{ margin-top:0; }
+
+/* Examples of our work: screenshots and one video, each in a frame
+   with its caption under it. The ground behind a picture is always
+   navy, like the brand kit's, because the screenshots are dark. A tall
+   phone screenshot is held to a height that fits on a screen, and the
+   caption links to the full-size file.
+   Each picture's box is as wide as its frame, so the browser can work
+   out its height from the width and height attributes before the file
+   arrives, and the page does not jump. The picture is drawn whole
+   inside that box, with navy either side of a tall one.
+   The frame clips whatever sticks out of it, so the video's focus ring
+   is drawn just inside the video, in the light colour used on navy. */
+.work{ display:grid; gap:18px; margin:24px 0; grid-template-columns:1fr; }
+@media (min-width:760px){ .work{ grid-template-columns:repeat(2, 1fr); } }
+.work figure{
+  margin:0; min-width:0; background:var(--surface); border:1px solid var(--line);
+  border-radius:var(--radius); overflow:hidden; display:flex; flex-direction:column;
+}
+.work .shot{ background:var(--navy); display:grid; place-items:center; flex:1; }
+.work img{ width:100%; height:auto; max-height:560px; object-fit:contain; }
+.work video{ --focus:var(--ti-hi); display:block; width:100%; max-width:100%; height:auto; background:var(--navy); }
+.work video:focus-visible{ outline-offset:-6px; border-radius:0; }
+.work figcaption{ padding:14px 18px; }
+.work figcaption p{ margin:0; }
+.work figcaption p + p{ margin-top:.6em; }
+.work figcaption a{ display:inline-flex; align-items:center; min-height:44px; font-weight:600; }
+@media print{
+  .work figure{ break-inside:avoid; }
+  .work .shot{ print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+}
+
+/* Services page: the list of services as plain labels, and the links
+   with a description under each. */
+.tags{ list-style:none; margin:0 0 1.5rem; padding:0; display:flex; flex-wrap:wrap; gap:.5rem; }
+.tags li{ margin:0; padding:.35rem .8rem; border:1px solid var(--line); border-radius:999px; font-size:.95rem; }
+.linklist{ margin:0 0 1.5rem; }
+.linklist dt{ font-weight:600; margin-top:1rem; }
+.linklist dd{ margin:.25rem 0 0; }
+.work figcaption h3{ margin:0 0 .4rem; font-size:1.05rem; }

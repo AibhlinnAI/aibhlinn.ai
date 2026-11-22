@@ -6,6 +6,8 @@ root, no build step:
 - `index.html`, the home page: who AibhlínnAI is, a card for each app (Pie
   Timers so far), questions about Pie Timers, the no-ads promise, and a
   contact section with the business details.
+- `services.html`, the services page. It mirrors the services page of the
+  LinkedIn company page, with examples of our work from `work/`.
 - `brand.html`, the brand kit for event organisers and media.
 - `privacy.html` and `terms.html`, for this website. Pie Timers has its own,
   on its own domain.
@@ -38,6 +40,13 @@ with far less reason to break them:
   `<meta name="referrer" content="no-referrer">`, so a site we link to is not
   told which page the visitor came from. `privacy.html` section 4 says so.
   The trade-off is that other sites cannot see that a visit came from here.
+- **One video, and it never starts by itself.** `services.html` has the
+  site's only media player: a plain `<video controls preload="none">` with a
+  file and a poster from `work/`. Nothing is fetched until the visitor
+  presses play, it has no sound, and the page says in words what it shows.
+  That page's Content-Security-Policy has `media-src 'self'` added, and no
+  other page's does. `accessibility.html` and `privacy.html` section 3 both
+  describe the video: keep them true.
 - **No cookies, no analytics.** The footer says so, which makes it a promise.
 - **No prices and no dates.** Both already live in several places that must
   move together (`CLAUDE.md`, "The launch dates live in several places").
@@ -64,12 +73,14 @@ reuses the dark theme's), or that line comes off the accessibility page.
 | File | What it is |
 | --- | --- |
 | `index.html` | The home page |
+| `services.html` | The services page. It mirrors the services page of the LinkedIn company page (see Keeping in step with LinkedIn): the short description, the four services, where we work, "Contact us for pricing", four examples of our work, and three links. No price. Its one date is the month of a past event, in a caption, not a launch or offer date |
+| `work/` | The four work samples shown on `services.html`, copied unchanged from the files on LinkedIn: three screenshots (PNG, 249 KB, 368 KB and 171 KB), one video (MP4, 25 seconds, no sound, 4.2 MB) and the video's poster (PNG, 408 KB). `services.html` states each size and each picture's width and height. Change the text if a file changes |
 | `brand.html` | The brand kit: logo downloads, colours, how to say and write the name, a short description to copy |
 | `privacy.html` | Privacy notice for this website. A draft no lawyer has read (see Legal pages) |
-| `terms.html` | Terms for this website, with how to complain (`#problems`) and how to report a security problem (`#security`). A draft no lawyer has read |
+| `terms.html` | Terms for this website, with how we may show work we make for a client (`#work`), how to complain (`#problems`) and how to report a security problem (`#security`). A draft no lawyer has read |
 | `accessibility.html` | What has been done, what is not perfect, and how to tell us |
 | `404.html` | Served by GitHub Pages for any missing path. Root-absolute links, because it can be served at any depth. Its picture is `apple-touch-icon.png`, 25 KB, not the 191 KB mark |
-| `robots.txt`, `sitemap.xml` | Allow everything, and list the five real pages. Never list `404.html` |
+| `robots.txt`, `sitemap.xml` | Allow everything, and list the six real pages. Never list `404.html` |
 | `site.css` | All styles for every page. New rules go at the end |
 | `aibhlinn-logo.png`, `aibhlinn-mark-512.png`, `aibhlinn-mark-80.png` | Copies of the files in `pie-timers-app/app/`. The two large ones are the brand-kit downloads on `brand.html`, which states their sizes (361 KB and 191 KB). Change the text if the files change |
 | `logo.webp`, `logo.jpg` | The logo re-encoded for the hero and the brand-kit preview: 9 KB and 33 KB instead of 361 KB |
@@ -104,11 +115,13 @@ convert aibhlinn-mark-512.png -strip \( -clone 0 -resize 16x16 \) \
    reads them line by line.
 3. Keep the skip link, the header bar and the footer exactly as they are.
    The footer is the same on every page. Put `aria-current="page"` on the
-   new page's own footer link if it has one.
+   new page's own footer link if it has one, and on its link in the top
+   bar if it has one there.
 4. Add the page to `sitemap.xml`, and to the footer of every page if
    visitors should find it.
-5. No style attributes, no `<style>` block, no script, no form, nothing
-   loaded from another host. The guard refuses all of them.
+5. No style attributes, no `<style>` block, no script, no form, no media
+   player, nothing loaded from another host. The guard refuses all of them.
+   The one video is on `services.html`, and the guard allows it only there.
 
 ## Legal pages
 
@@ -129,6 +142,39 @@ They must stay in step with the Pie Timers policies in `pie-timers-app`:
   to 6 and `app/privacy.html` section 9. Change them together.
 - `accessibility.html` makes claims that can be tested. If a change to the
   site makes one untrue, fix the site or remove the line.
+- `terms.html` section 6, "Work we make for you" (`#work`), says we may use
+  what we have developed as marketing material, and that anyone identified
+  in it can ask for identifiers to be removed. It was added on 22 November
+  2026 as a first draft for the owner to approve. Keep its meaning exactly.
+  Section 2 of the terms, the second paragraph of `privacy.html` section 7
+  (and the last bullet of that page's short version, which points to
+  section 7), the paragraph under the examples on `services.html` and the
+  last paragraph of that page's "Get in touch" all point to it: change
+  them together. They point and do not restate, so the section stays the
+  only place that says what we may do.
+
+## Keeping in step with LinkedIn
+
+The LinkedIn company page is `https://www.linkedin.com/company/aibhlinnai/`.
+The owner wrote its About text and its services page on 22 November 2026,
+and this site was brought into line with them that day. When either
+changes, change the other:
+
+- the hero lede, the four "What we do" cards and the Organization
+  description in the JSON-LD on `index.html`, and that page's meta and Open
+  Graph descriptions, follow the LinkedIn About text
+- the "About AibhlínnAI, to copy" paragraph on `brand.html` is the same
+  text in the third person, because other people paste it
+- `services.html` follows the LinkedIn services page: its opening lines,
+  where we work, "Contact us for pricing", the four work samples and their
+  captions, and the links
+- "We work remotely as standard. If you would prefer us there in person,
+  we can travel, and travel costs are invoiced." is the same sentence on
+  `index.html`, on `services.html` and on LinkedIn
+
+LinkedIn is linked from the footer of every page, listed in `sameAs` in
+the JSON-LD, and named in `privacy.html` section 4. It is a plain link:
+no badge, no logo and no widget from LinkedIn.
 
 If the host changes, if email moves to another provider, or if anything
 starts counting visits, change `privacy.html` the same day.
@@ -147,11 +193,17 @@ failure stops the deploy:
   handler attributes, no script files
 - nothing loaded from another host, no embeds or forms, no style attributes
   and no `<style>` blocks
-- every page has the policy tags and a title. Every page but `404.html` has a
+- no media player, except one video tag on `services.html`. That tag must
+  sit on one line and start exactly
+  `<video controls preload="none" poster="work/...png" `, with no `autoplay`
+  and no `loop`
+- every page has the policy tags and a title. `services.html` must have the
+  policy with `media-src 'self'` added, and every other page must have it
+  without. Every page but `404.html` has a
   description, a canonical address and the footer promise. `404.html` has
   `noindex`. The two legal pages have their "not reviewed" comment
-- the JSON-LD parses, every local link and image points at a file that
-  exists, and `sitemap.xml` lists every page except `404.html`
+- the JSON-LD parses, every local link, image and video poster points at
+  a file that exists, and `sitemap.xml` lists every page except `404.html`
 
 ## What the host decides
 
