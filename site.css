@@ -540,3 +540,13 @@ h1,h2,h3{ text-wrap:balance; }
   .chip, .app-tile, .kit .art, .ticks li::before{ print-color-adjust:exact; -webkit-print-color-adjust:exact; }
   main a[href^="http"]::after{ content:" (" attr(href) ")"; font-weight:400; overflow-wrap:anywhere; }
 }
+
+/* The second half of the tagline, under "Aim for the gap." in the hero.
+   It pulls up into the tagline's bottom margin so the two read as one
+   line of thought, and takes that margin over for the space below. */
+.tagline-sub{
+  margin:-18px auto 26px;
+  font-size:clamp(1.05rem, .92rem + .7vw, 1.35rem);
+  font-weight:500; letter-spacing:-.005em; line-height:1.3;
+  color:var(--ti);
+}
