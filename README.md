@@ -3,9 +3,10 @@
 A small static site for the bare domain `aibhlinn.ai`. Flat files at the repo
 root, no build step:
 
-- `index.html`, the home page: who AibhlínnAI is, a card for each app (Pie
-  Timers so far), questions about Pie Timers, the no-ads promise, and a
-  contact section with the business details.
+- `index.html`, the home page: who AibhlínnAI is, how an automation and AI
+  project runs, a card for each app (Pie Timers so far), questions and
+  answers in two groups (about Pie Timers, then about AibhlínnAI), the
+  no-ads promise, and a contact section with the business details.
 - `services.html`, the services page. It mirrors the services page of the
   LinkedIn company page, with examples of our work from `work/`.
 - `brand.html`, the brand kit for event organisers and media.
@@ -14,7 +15,8 @@ root, no build step:
 - `accessibility.html`, a plain statement of what has been done and what is
   not perfect.
 - `404.html`, which points lost visitors home and at Pie Timers.
-- `robots.txt` and `sitemap.xml`.
+- `robots.txt`, `sitemap.xml` and `llms.txt`, for search engines and AI
+  assistants.
 
 **Home: the `AibhlinnAI/aibhlinn.ai` repo**, published by GitHub Pages
 from `.github/workflows/deploy.yml`. It was drafted in `www/` of
@@ -28,7 +30,8 @@ Same principles as the app (`ARCHITECTURE.md` §3 and §4), applied to a page
 with far less reason to break them:
 
 - **No JavaScript.** The only `<script>` is JSON-LD, which is data for search
-  engines and never runs. Nothing on the page needs code.
+  engines and AI assistants and never runs. It is on every page except
+  `404.html`. Nothing on the page needs code.
 - **No third-party requests.** The font is self-hosted (copied from
   `pie-timers-app/app/fonts/`), images are local, and there is no CDN. The
   guard job in `.github/workflows/deploy.yml` scans for secrets and tracker
@@ -67,20 +70,25 @@ Timers' own purple, green and orange appear only inside its card. Every text
 colour pair clears 6.9:1 contrast, and `accessibility.html` says so. A new
 text colour must reuse a pair that is already measured (the promise band
 reuses the dark theme's), or that line comes off the accessibility page.
+The numerals on the project steps are white on `#2E3A63`, the light
+theme's button pair, in both themes. The navy head of the inner pages
+reuses the dark theme's pairs. An alternate section (`.section--alt`) swaps
+the page ground and the card ground, so its pairs are measured too.
 
 ## Files
 
 | File | What it is |
 | --- | --- |
 | `index.html` | The home page |
-| `services.html` | The services page. It mirrors the services page of the LinkedIn company page (see Keeping in step with LinkedIn): the short description, the four services, where we work, "Contact us for pricing", four examples of our work, and three links. No price. Its one date is the month of a past event, in a caption, not a launch or offer date |
-| `work/` | The four work samples shown on `services.html`, copied unchanged from the files on LinkedIn: three screenshots (PNG, 249 KB, 368 KB and 171 KB), one video (MP4, 25 seconds, no sound, 4.2 MB) and the video's poster (PNG, 408 KB). `services.html` states each size and each picture's width and height. Change the text if a file changes |
+| `services.html` | The services page. It mirrors the services page of the LinkedIn company page (see Keeping in step with LinkedIn): the short description, the four "What we do" cards, the seven services provided, where we work, "Contact us for pricing", four examples of our work, and three links. No price. Its one date is the month of a past event, in a caption, not a launch or offer date |
+| `work/` | The four work samples shown on `services.html`, copied unchanged from the files on LinkedIn, except the phone program, which the owner replaced on 22 November 2026 with a shorter crop (824 × 1830) that ends after the first session: three screenshots (PNG, 249 KB, 312 KB and 171 KB), one video (MP4, 25 seconds, no sound, 4.2 MB) and the video's poster (PNG, 408 KB). `services.html` states each size and each picture's width and height. Change the text if a file changes |
 | `brand.html` | The brand kit: logo downloads, colours, how to say and write the name, a short description to copy |
 | `privacy.html` | Privacy notice for this website. A draft no lawyer has read (see Legal pages) |
 | `terms.html` | Terms for this website, with how we may show work we make for a client (`#work`), how to complain (`#problems`) and how to report a security problem (`#security`). A draft no lawyer has read |
 | `accessibility.html` | What has been done, what is not perfect, and how to tell us |
 | `404.html` | Served by GitHub Pages for any missing path. Root-absolute links, because it can be served at any depth. Its picture is `apple-touch-icon.png`, 25 KB, not the 191 KB mark |
-| `robots.txt`, `sitemap.xml` | Allow everything, and list the six real pages. Never list `404.html` |
+| `robots.txt`, `sitemap.xml` | `robots.txt` allows everything and names the main search and AI crawlers, so the welcome is plain. `sitemap.xml` lists the six real pages, each with a `lastmod` date: change a page's date when its words change. Never list `404.html` |
+| `llms.txt` | A plain Markdown summary for AI assistants: who we are, key facts, Pie Timers, the services, how a project runs, and links. Every line repeats something a page says: change them together. It follows the llms.txt layout: all the facts sit above the first `## ` heading, under bold labels, and each `## ` section (Pages, Pie Timers links, Elsewhere) is a list of links only. `robots.txt` points to it. No page links to it |
 | `site.css` | All styles for every page. New rules go at the end |
 | `aibhlinn-logo.png`, `aibhlinn-mark-512.png`, `aibhlinn-mark-80.png` | Copies of the files in `pie-timers-app/app/`. The two large ones are the brand-kit downloads on `brand.html`, which states their sizes (361 KB and 191 KB). Change the text if the files change |
 | `logo.webp`, `logo.jpg` | The logo re-encoded for the hero and the brand-kit preview: 9 KB and 33 KB instead of 361 KB |
@@ -113,12 +121,19 @@ convert aibhlinn-mark-512.png -strip \( -clone 0 -resize 16x16 \) \
    the title, description, canonical, `og:title`, `og:description` and
    `og:url` to the new page's. Keep each `<link>` tag on one line: the guard
    reads them line by line.
-3. Keep the skip link, the header bar and the footer exactly as they are.
+   Before `</head>`, add the JSON-LD block from another inner page and
+   change the page address, the `name` (the page's title) and the
+   breadcrumb name. Write the tag exactly `<script type="application/ld+json">`.
+3. Inside `<main class="doc doc--headed">`, keep the page head: the
+   `<div class="page-head">` with the breadcrumb, the `<h1>` and the first
+   paragraph. Change the breadcrumb's last item to the new page's name.
+   Keep the skip link, the header bar and the footer exactly as they are.
    The footer is the same on every page. Put `aria-current="page"` on the
    new page's own footer link if it has one, and on its link in the top
    bar if it has one there.
-4. Add the page to `sitemap.xml`, and to the footer of every page if
-   visitors should find it.
+4. Add the page to `sitemap.xml` with a `lastmod` date, to the Pages list
+   in `llms.txt`, and to the footer of every page if visitors should find
+   it.
 5. No style attributes, no `<style>` block, no script, no form, no media
    player, nothing loaded from another host. The guard refuses all of them.
    The one video is on `services.html`, and the guard allows it only there.
@@ -145,13 +160,26 @@ They must stay in step with the Pie Timers policies in `pie-timers-app`:
 - `terms.html` section 6, "Work we make for you" (`#work`), says we may use
   what we have developed as marketing material, and that anyone identified
   in it can ask for identifiers to be removed. It was added on 22 November
-  2026 as a first draft for the owner to approve. Keep its meaning exactly.
+  2026, and the owner approved its wording that day. Keep its wording and
+  its meaning exactly.
   Section 2 of the terms, the second paragraph of `privacy.html` section 7
   (and the last bullet of that page's short version, which points to
   section 7), the paragraph under the examples on `services.html` and the
   last paragraph of that page's "Get in touch" all point to it: change
   them together. They point and do not restate, so the section stays the
-  only place that says what we may do.
+  only place that says what we may do. If identifiers are removed from an
+  example under that section, also remove them from `llms.txt` and from
+  the CreativeWork node in the JSON-LD on `services.html`.
+- "Privacy and risk" on `services.html` says how we handle a client's
+  information in a pilot. It must stay true to `privacy.html`: the line
+  about naming services matches section 6 there. It makes no promise
+  about selling or sharing information, on purpose: `privacy.html` covers
+  this website only, and section 6 of the terms is the only place that
+  says what we may do with a client's work. The promise "We never sell
+  your data or share it for marketing" on `index.html` stays as it is.
+- The date on each legal page is a `<time>` element. Change its
+  `datetime`, the `dateModified` in that page's JSON-LD and the page's
+  `lastmod` in `sitemap.xml` together with the visible date.
 
 ## Keeping in step with LinkedIn
 
@@ -169,8 +197,34 @@ changes, change the other:
   where we work, "Contact us for pricing", the four work samples and their
   captions, and the links
 - "We work remotely as standard. If you would prefer us there in person,
-  we can travel, and travel costs are invoiced." is the same sentence on
-  `index.html`, on `services.html` and on LinkedIn
+  we can travel, and travel and accommodation costs are invoiced." is the
+  same sentence on `index.html` and on `services.html`. The owner added
+  "and accommodation" on 22 November 2026: LinkedIn must say the same
+- the seven "Services provided" on `services.html` are LinkedIn's list
+  without Web Design and Web Development, which the owner took off on
+  22 November 2026 because we do not offer them: take them off LinkedIn
+  too
+
+Some text is this site's own and is not on LinkedIn: "How an automation
+and AI project runs" on `index.html` and on `services.html` (the four
+steps, what suits automation, "Privacy and risk" and "What you get"),
+the "Questions about AibhlínnAI" group on `index.html`, and `llms.txt`. They
+restate LinkedIn text in places, so check them when it changes:
+
+- the Service descriptions in the JSON-LD on `services.html` are the
+  three "What we do" cards on that page, word for word, and `llms.txt`
+  repeats them
+- the remote-work sentence also appears in the third person in "Questions
+  about AibhlínnAI" and in the FAQ data, and in the first person, as
+  above, in `llms.txt`
+- `knowsAbout` in the JSON-LD on `index.html` is four topics, each a word
+  or phrase the page shows: Automation, AI, Countdown visual timers and
+  Neurodivergence. The service names are on `services.html`, as Service
+  nodes
+- the JSON-LD on `index.html` has one page node, typed both `WebPage` and
+  `FAQPage`, with every question on the page as its `mainEntity`. The
+  ABN is there twice on purpose: as `taxID`, and as an `identifier`
+  labelled "ABN". Never add an ABN register address to `sameAs`
 
 LinkedIn is linked from the footer of every page, listed in `sameAs` in
 the JSON-LD, and named in `privacy.html` section 4. It is a plain link:
@@ -204,6 +258,25 @@ failure stops the deploy:
   `noindex`. The two legal pages have their "not reviewed" comment
 - the JSON-LD parses, every local link, image and video poster points at
   a file that exists, and `sitemap.xml` lists every page except `404.html`
+- the files for search engines and AI assistants: `robots.txt` keeps its
+  Sitemap line and its `User-agent: *` and `Allow: /` pair, and shuts
+  nothing out. `llms.txt` exists, starts `# AibhlínnAI`, keeps the three
+  fixed sentences, has no HTML, and links only to pages and ids that
+  exist. No JSON-LD has an offer, price, rating, review, award, founder,
+  staff, founding date or offer catalogue field. Every FAQ question and
+  answer and every Service description in the JSON-LD is on its page
+  word for word, and a page shows exactly as many questions
+  (`class="faq-item"`) as its data holds. Every page but `404.html` has
+  exactly one JSON-LD block with one WebPage, whose `name` is the page
+  title and whose `url` is the canonical address. On a page with a
+  "Last updated" date, that date, `dateModified` in the JSON-LD and the
+  page's `lastmod` in `sitemap.xml` are the same. The four project steps
+  are on both `index.html` and `services.html`, and say the same on
+  both. Every sitemap entry has one `lastmod`, a real date that is not
+  in the future
+
+The deploy job also checks that `robots.txt`, `sitemap.xml` and `llms.txt`
+are in the published site.
 
 ## What the host decides
 

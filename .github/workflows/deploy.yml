@@ -10,7 +10,9 @@
 # The steps after the first three are this site's own. They hold it to
 # the rest of what it promises: no JavaScript, nothing loaded from any
 # other host, no inline styles, and every page complete, with working
-# local links. README.md, "What the deploy guard checks", lists them.
+# local links. The last step checks the files that search engines and AI
+# assistants read: robots.txt, llms.txt, the structured data and the
+# sitemap. README.md, "What the deploy guard checks", lists them.
 #
 # There is no build step. The files the browser runs are the files in
 # the repo. The deploy uploads the repo root minus the repo's own
@@ -70,9 +72,10 @@ jobs:
           echo "Every published ABN is held together."
 
       # This site promises no JavaScript at all. The one script tag allowed
-      # is the JSON-LD data block on the home page, which is data for
-      # search engines and never runs. It must be written exactly as
-      # <script type="application/ld+json"> to pass.
+      # is the JSON-LD data block, which is on every page except 404.html.
+      # It is data for search engines and AI assistants and never runs. It
+      # must be written exactly as <script type="application/ld+json"> to
+      # pass.
       - name: Refuse to publish JavaScript
         run: |
           set -u
@@ -261,6 +264,178 @@ jobs:
           print(f'{len(pages)} pages: structured data parses, local links resolve, and the sitemap matches.')
           PY
 
+      # robots.txt, llms.txt and the sitemap are what search engines and AI
+      # assistants read first. robots.txt must shut nobody out and must
+      # keep its Sitemap line. llms.txt must say who we are in the fixed
+      # words, link only to pages and ids that exist, and carry no markup.
+      # Structured data must make no claim the page does not show: no
+      # price, offer, rating, review, award, founder or staff fields, every
+      # FAQ question and answer must be on the page word for word, and so
+      # must every Service description. It works the other way too: every
+      # question shown on a page must be in that page's data. Every page
+      # but 404.html has one data block, whose page name is the title and
+      # whose address is the canonical one. A page with a "Last updated"
+      # date shows the same date in its data and in the sitemap. The steps
+      # of an automation project are written out on index.html and
+      # services.html, must be on both, and must say the same thing.
+      # Every sitemap address has a date, and no date is in the future.
+      - name: Check the files for search engines and AI assistants
+        run: |
+          python3 - <<'PY'
+          import datetime, html, json, pathlib, re, sys
+
+          root = pathlib.Path('.')
+          site = 'https://aibhlinn.ai/'
+          errors = []
+
+          def source(p):
+              return re.sub(r'<!--.*?-->', '', p.read_text(encoding='utf-8'), flags=re.S)
+
+          def flat(s):
+              return re.sub(r'\s+', ' ', html.unescape(s)).strip()
+
+          def words(fragment):
+              return flat(re.sub(r'<[^>]+>', '', re.sub(r'<script.*?</script>', '', fragment, flags=re.S)))
+
+          robots = root / 'robots.txt'
+          rtext = robots.read_text(encoding='utf-8') if robots.is_file() else ''
+          if 'Sitemap: https://aibhlinn.ai/sitemap.xml' not in rtext:
+              errors.append('robots.txt is missing or has lost its Sitemap line')
+          if not re.search(r'(?m)^User-agent: \*\r?\nAllow: /\s*$', rtext):
+              errors.append('robots.txt must keep "User-agent: *" followed by "Allow: /"')
+          for line in rtext.splitlines():
+              if re.match(r'(?i)\s*Disallow\s*:\s*\S', line):
+                  errors.append(f'robots.txt shuts something out: {line.strip()}')
+
+          llms = root / 'llms.txt'
+          ltext = llms.read_text(encoding='utf-8').replace('\r\n', '\n') if llms.is_file() else ''
+          if not ltext.startswith('# AibhlínnAI\n'):
+              errors.append('llms.txt is missing or does not start with "# AibhlínnAI"')
+          for must in ('AibhlínnAI is a small independent AI studio from South Australia.',
+                       'Aim for the gap. Simple tools to support busy minds.',
+                       'Pie Timers is a countdown visual timer shaped like a pie that gets eaten as time passes. One glance tells you where you are in your day, without doing the sums.'):
+              if must not in ltext:
+                  errors.append(f'llms.txt has lost the fixed words: {must[:50]}...')
+          if re.search(r'<[a-zA-Z/!]', ltext):
+              errors.append('llms.txt must be plain Markdown, with no HTML')
+          for url in re.findall(r'\]\((.*?)\)', ltext):
+              if not url.startswith('https://'):
+                  errors.append(f'llms.txt: {url} is not a full https address')
+              elif url.startswith(site):
+                  path, _, frag = url[len(site):].partition('#')
+                  f = root / path
+                  if f.is_dir():
+                      f = f / 'index.html'
+                  if not f.is_file():
+                      errors.append(f'llms.txt: {url} has no file in the repo')
+                  elif frag and not re.search(r'\bid\s*=\s*["\']' + re.escape(frag) + r'["\']', source(f)):
+                      errors.append(f'llms.txt: {url} points at an id that is not in {f}')
+
+          banned = {'offers', 'price', 'priceCurrency', 'priceRange', 'aggregateRating', 'review',
+                    'award', 'founder', 'founders', 'employee', 'employees', 'numberOfEmployees',
+                    'foundingDate', 'makesOffer', 'hasOfferCatalog'}
+
+          def types(n):
+              t = n.get('@type', [])
+              return t if isinstance(t, list) else [t]
+
+          smap = root / 'sitemap.xml'
+          lastmod = dict(re.findall(r'<loc>\s*(.*?)\s*</loc>\s*<lastmod>\s*(.*?)\s*</lastmod>',
+                                    smap.read_text(encoding='utf-8'))) if smap.is_file() else {}
+
+          def nodes(node):
+              if isinstance(node, dict):
+                  yield node
+                  for v in node.values():
+                      yield from nodes(v)
+              elif isinstance(node, list):
+                  for v in node:
+                      yield from nodes(v)
+
+          steps = {}
+          for p in sorted(root.glob('*.html')):
+              text = source(p)
+              seen = words(text)
+              blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', text, re.S)
+              webpages = []
+              questions = 0
+              for b in blocks:
+                  try:
+                      data = json.loads(b)
+                  except ValueError:
+                      continue   # the step above reports it
+                  for n in nodes(data):
+                      if 'WebPage' in types(n):
+                          webpages.append(n)
+                      if 'Question' in types(n):
+                          questions += 1
+                      for k in n:
+                          if k in banned:
+                              errors.append(f'{p.name}: structured data must not have a "{k}" field')
+                      if n.get('@type') == 'Question':
+                          name = flat(str(n.get('name', '')))
+                          a = n.get('acceptedAnswer')
+                          answer = flat(str(a.get('text', ''))) if isinstance(a, dict) else ''
+                          if not name or name not in seen:
+                              errors.append(f'{p.name}: the FAQ question "{name[:60]}" is not on the page word for word')
+                          if not answer or answer not in seen:
+                              errors.append(f'{p.name}: the FAQ answer to "{name[:60]}" is not on the page word for word')
+                      if n.get('@type') == 'Service':
+                          d = flat(str(n.get('description', '')))
+                          if not d or d not in seen:
+                              errors.append(f'{p.name}: the description of the service "{n.get("name", "")}" is not on the page word for word')
+              shown = text.count('class="faq-item"')
+              if shown != questions:
+                  errors.append(f'{p.name}: the page shows {shown} questions but its structured data has {questions}')
+              if p.name != '404.html':
+                  title = flat(''.join(re.findall(r'<title>(.*?)</title>', text, re.S)))
+                  canon = ''.join(re.findall(r'<link rel="canonical" href="([^"]*)">', text))
+                  stamps = re.findall(r'<p class="updated">[^<]*<time datetime="([^"]*)"', text)
+                  if len(blocks) != 1:
+                      errors.append(f'{p.name}: needs exactly one JSON-LD block, and has {len(blocks)}')
+                  if len(webpages) != 1:
+                      errors.append(f'{p.name}: its structured data needs exactly one WebPage, and has {len(webpages)}')
+                  else:
+                      w = webpages[0]
+                      if flat(str(w.get('name', ''))) != title:
+                          errors.append(f'{p.name}: the WebPage name in the structured data is not the page title')
+                      if w.get('url') != canon:
+                          errors.append(f'{p.name}: the WebPage url in the structured data is not the canonical address')
+                      if stamps:
+                          if len(stamps) != 1 or w.get('dateModified') != stamps[0] or lastmod.get(canon) != stamps[0]:
+                              errors.append(f'{p.name}: the "Last updated" date, dateModified in the structured data and lastmod in sitemap.xml must all be the same date')
+                      elif 'dateModified' in w:
+                          errors.append(f'{p.name}: the structured data has a dateModified but the page shows no "Last updated" date')
+              m = re.search(r'<ol class="steps"[^>]*>(.*?)</ol>', text, re.S)
+              if m:
+                  steps[p.name] = words(m.group(1))
+          if sorted(steps) != ['index.html', 'services.html']:
+              errors.append('the steps of an automation project must be on index.html and services.html, and only there: found on ' + (', '.join(sorted(steps)) or 'no page'))
+          if len(set(steps.values())) > 1:
+              errors.append('the steps of an automation project differ between ' + ' and '.join(sorted(steps)))
+
+          sitemap = root / 'sitemap.xml'
+          stext = sitemap.read_text(encoding='utf-8') if sitemap.is_file() else ''
+          latest = datetime.datetime.now(datetime.timezone.utc).date() + datetime.timedelta(days=1)
+          for entry in re.findall(r'<url>(.*?)</url>', stext, re.S):
+              loc = ''.join(re.findall(r'<loc>\s*(.*?)\s*</loc>', entry))
+              dates = re.findall(r'<lastmod>\s*(.*?)\s*</lastmod>', entry)
+              if len(dates) != 1:
+                  errors.append(f'sitemap.xml: {loc} needs one lastmod date')
+              for d in dates:
+                  try:
+                      if datetime.date.fromisoformat(d) > latest:
+                          errors.append(f'sitemap.xml: lastmod {d} is in the future')
+                  except ValueError:
+                      errors.append(f'sitemap.xml: lastmod {d} is not a date written YYYY-MM-DD')
+
+          for e in errors:
+              print(f'::error::{e}')
+          if errors:
+              sys.exit(1)
+          print('robots.txt welcomes everyone, llms.txt is sound, and structured data claims only what the pages show.')
+          PY
+
   deploy:
     needs: guard
     runs-on: ubuntu-latest
@@ -277,11 +452,12 @@ jobs:
           mkdir -p site
           rsync -a --exclude='.git' --exclude='.github' --exclude='site' --exclude='README.md' ./ site/
 
-      - name: Check robots.txt and the sitemap are in the published site
+      - name: Check robots.txt, the sitemap and llms.txt are in the published site
         run: |
           test -f site/robots.txt
           test -f site/sitemap.xml
-          echo "robots.txt and sitemap.xml are in the published site."
+          test -f site/llms.txt
+          echo "robots.txt, sitemap.xml and llms.txt are in the published site."
 
       # Stay on v3. From v4 this action leaves dot-files out of the
       # artifact, and .nojekyll is one.

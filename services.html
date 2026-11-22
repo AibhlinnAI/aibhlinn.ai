@@ -6,7 +6,7 @@
 <meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'">
 <meta name="referrer" content="no-referrer">
 <meta name="format-detection" content="telephone=no">
-<title>Services | AibhlínnAI</title>
+<title>Automation and AI consultancy, event support | AibhlínnAI</title>
 <meta name="description" content="Services from AibhlínnAI, a small independent AI studio from South Australia: your event program online as a live countdown visual timer, and practical help with automation and AI.">
 <link rel="canonical" href="https://aibhlinn.ai/services.html">
 <meta name="theme-color" content="#050818">
@@ -32,14 +32,118 @@
 <meta property="og:locale" content="en_AU">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:image:alt" content="The AibhlínnAI logo: a silver Aí monogram above the name, on deep navy.">
+
+<!-- Data for search engines, not a script: nothing here runs. Every
+     value repeats words that are visible on this page. No offers,
+     price or rating fields, on purpose. -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aibhlinn.ai/#organisation",
+      "name": "AibhlínnAI",
+      "url": "https://aibhlinn.ai/"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aibhlinn.ai/#website",
+      "url": "https://aibhlinn.ai/",
+      "name": "AibhlínnAI"
+    },
+    {
+      "@type": "WebPage",
+      "@id": "https://aibhlinn.ai/services.html#webpage",
+      "url": "https://aibhlinn.ai/services.html",
+      "name": "Automation and AI consultancy, event support | AibhlínnAI",
+      "inLanguage": "en-AU",
+      "isPartOf": {
+        "@id": "https://aibhlinn.ai/#website"
+      },
+      "about": {
+        "@id": "https://aibhlinn.ai/#organisation"
+      },
+      "breadcrumb": {
+        "@id": "https://aibhlinn.ai/services.html#breadcrumb"
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://aibhlinn.ai/services.html#breadcrumb",
+      "itemListElement": [
+        {
+          "@type": "ListItem",
+          "position": 1,
+          "name": "Home",
+          "item": "https://aibhlinn.ai/"
+        },
+        {
+          "@type": "ListItem",
+          "position": 2,
+          "name": "Services",
+          "item": "https://aibhlinn.ai/services.html"
+        }
+      ]
+    },
+    {
+      "@type": "Service",
+      "@id": "https://aibhlinn.ai/services.html#automation-service",
+      "name": "Automation and AI consultancy",
+      "serviceType": "Automation and AI consultancy",
+      "url": "https://aibhlinn.ai/services.html#automation",
+      "description": "Practical help finding the work that automation can take on in your organisation. We start with a small pilot, so you can see whether it helps before anything is rolled out.",
+      "provider": {
+        "@id": "https://aibhlinn.ai/#organisation"
+      }
+    },
+    {
+      "@type": "Service",
+      "@id": "https://aibhlinn.ai/services.html#event-service",
+      "name": "Neuro-affirming event support",
+      "serviceType": "Neuro-affirming event support",
+      "url": "https://aibhlinn.ai/services.html#what-we-do",
+      "description": "For conferences and other events we put your event program online as a live countdown visual timer. It shows on the big screens at your venue, and attendees open it on their own phones from a QR code, with nothing to install. We can also help you arrange planned breaks, times when a quiet space is open, and a printable program in plain language.",
+      "provider": {
+        "@id": "https://aibhlinn.ai/#organisation"
+      }
+    },
+    {
+      "@type": "Service",
+      "@id": "https://aibhlinn.ai/services.html#advocacy-service",
+      "name": "Neurodivergence advocacy",
+      "serviceType": "Neurodivergence advocacy",
+      "url": "https://aibhlinn.ai/services.html#what-we-do",
+      "description": "Advocacy for access, choice and respect for neurodivergent people at work and in everyday life.",
+      "provider": {
+        "@id": "https://aibhlinn.ai/#organisation"
+      }
+    },
+    {
+      "@type": "CreativeWork",
+      "@id": "https://pietimers.aibhlinn.ai/ndexpo26/#program",
+      "name": "Neurodivergent Entrepreneurs Expo | Conference Program",
+      "url": "https://pietimers.aibhlinn.ai/ndexpo26/",
+      "description": "Online program we developed for the Neurodivergent Entrepreneurs Expo in Adelaide, September 2026. On the day the live program ran on the big screen and on attendees' own phones from a QR code, with nothing to install.",
+      "creator": {
+        "@id": "https://aibhlinn.ai/#organisation"
+      }
+    }
+  ]
+}
+</script>
 </head>
 <!-- This page mirrors the services page of our LinkedIn company page
      (https://www.linkedin.com/company/aibhlinnai/services), which the
      owner wrote on 22 November 2026. The opening lines, the four
-     paragraphs under "What we do", the nine services, the availability and
+     paragraphs under "What we do", the seven services, the availability and
      pricing lines, and the titles and descriptions of the four examples
      and three links are the owner's words:
      change them there and here together.
+     The block that starts at the h2 with id="automation", "How an
+     automation and AI project runs", down to "Services provided", is
+     site-only. It is not from LinkedIn, and it is new text for the owner
+     to approve. The page head with its breadcrumb is site-only too.
      This is the one page with a video, so its Content-Security-Policy
      also has media-src 'self', and the deploy guard allows the video tag
      here and nowhere else. Keep the whole video tag on one line, written
@@ -67,11 +171,21 @@
   </nav>
 </header>
 
-<main id="main" tabindex="-1" class="doc">
+<main id="main" tabindex="-1" class="doc doc--headed">
+  <div class="page-head">
+    <div class="wrap">
+      <nav class="crumbs" aria-label="Breadcrumb">
+        <ol>
+          <li><a href="./">Home</a></li>
+          <li aria-current="page">Services</li>
+        </ol>
+      </nav>
+      <h1>Services</h1>
+      <p class="intro">AibhlínnAI is a small independent AI studio from South
+      Australia.</p>
+    </div>
+  </div>
   <div class="wrap">
-    <h1>Services</h1>
-    <p class="intro">AibhlínnAI is a small independent AI studio from South
-    Australia.</p>
 
     <div class="grid grid--four">
       <section class="card" aria-labelledby="for-events">
@@ -87,7 +201,8 @@
       </section>
     </div>
     <p>We work remotely as standard. If you would prefer us there in
-    person, we can travel, and travel costs are invoiced.</p>
+    person, we can travel, and travel and accommodation costs are
+    invoiced.</p>
     <p>We also make Pie Timers, a visual timer app.</p>
 
     <h2 id="what-we-do">What we do</h2>
@@ -131,9 +246,75 @@
       </div>
     </div>
 
+    <!-- This section is ours, not LinkedIn's. It says how a project runs
+         and what we commit to. It names no client, number or result, and
+         says nothing about our own tools. The four steps are the same as
+         on index.html#automation, and the deploy guard checks that they
+         match: change them together. "Privacy and risk" must stay true
+         to privacy.html, and must never say what we may do with a
+         client's work: section 6 of terms.html is the only place for
+         that. -->
+    <h2 id="automation">How an automation and AI project runs</h2>
+    <p>AibhlínnAI gives organisations practical help finding the work that
+    automation can take on. We start with a small pilot, so you can see
+    whether it helps before anything is rolled out.</p>
+    <ol class="steps" role="list">
+      <li>
+        <h3>Find the work</h3>
+        <p>You tell us about the tasks that take up time in your organisation. Together we choose one that is small, repeated and easy to check.</p>
+      </li>
+      <li>
+        <h3>Run a small pilot</h3>
+        <p>We set up a pilot for that one task. The rest of your work carries on as it is.</p>
+      </li>
+      <li>
+        <h3>See whether it helps</h3>
+        <p>You see the pilot working on that task. We tell you plainly what worked and what did not.</p>
+      </li>
+      <li>
+        <h3>You decide</h3>
+        <p>Nothing is rolled out until you have seen the pilot and chosen to go on. If the pilot did not help, we say so.</p>
+      </li>
+    </ol>
+
+    <div class="fit">
+      <div class="card">
+        <h3>Privacy and risk</h3>
+        <ul class="card-list">
+          <li>Before a pilot starts, we agree with you what information it
+          will use.</li>
+          <li>We tell you which services will handle that information, by
+          name. Our own <a href="privacy.html">privacy notice</a> does the
+          same.</li>
+          <li>Where we can, a pilot starts with sample data, not real
+          records about people.</li>
+          <li>We design each pilot so that a person checks the
+          result.</li>
+        </ul>
+      </div>
+      <div class="card">
+        <h3>What you get</h3>
+        <ul class="card-list">
+          <li>A pilot on one task, for you to try.</li>
+          <li>A plain language explanation of what the pilot does, what it
+          does not do, and what it needs from your people.</li>
+          <li>A straight answer on whether it is worth going further.</li>
+          <li>No promise of savings in advance. The pilot is there to show
+          you.</li>
+        </ul>
+      </div>
+    </div>
+    <p>We will tell you when automation is the wrong tool. The home page
+    lists <a href="./#automation">what suits automation, and what does not</a>.</p>
+    <p>The <a href="#examples">examples of our work</a> on this page are
+    from events and from our own app.</p>
+    <p class="card-link"><a href="mailto:hello+consult@aibhlinn.ai?subject=Automation%20and%20AI">Email us about automation and AI</a><span class="addr">hello+consult@aibhlinn.ai</span></p>
+
     <h2 id="services-provided">Services provided</h2>
-    <!-- The nine services, the availability line and the pricing line
-         are the fields on our LinkedIn services page, word for word. -->
+    <!-- The seven services, the availability line and the pricing line
+         are the fields on our LinkedIn services page, word for word. On
+         22 November 2026 the owner took Web Design and Web Development
+         off this list: they are not services we offer. -->
     <ul class="tags">
       <li>Diversity and Inclusion</li>
       <li>Corporate Events</li>
@@ -142,21 +323,22 @@
       <li>Android Development</li>
       <li>Application Development</li>
       <li>Mobile Application Development</li>
-      <li>Web Design</li>
-      <li>Web Development</li>
     </ul>
 
     <h2 id="where-we-work">Availability</h2>
     <p>Remote or in person (Adelaide, SA).</p>
     <p>We work remotely as standard. If you would prefer us there in
-    person, we can travel, and travel costs are invoiced.</p>
+    person, we can travel, and travel and accommodation costs are
+    invoiced.</p>
 
     <h2 id="pricing">Pricing</h2>
     <p>Contact for pricing:
     <a href="mailto:hello@aibhlinn.ai">hello@aibhlinn.ai</a></p>
 
     <h2 id="examples">Examples of our work</h2>
-    <!-- Each picture is the file the owner put on LinkedIn, unchanged.
+    <!-- Each picture is the file the owner put on LinkedIn, unchanged,
+         except the phone program: on 22 November 2026 the owner replaced
+         it with a shorter crop that ends after the first session.
          width and height are the file's real size, so the page does not
          jump when a picture arrives. -->
     <div class="work">
@@ -172,12 +354,12 @@
         </figcaption>
       </figure>
       <figure>
-        <div class="shot"><img src="work/event-program-phone.png" width="824" height="2197" loading="lazy" decoding="async" alt="The same program on a phone, in one column. The event name and venue come first, then the time, 11am. Under that is the large pie for the whole day, with 3 hours 10 min left. The sessions follow in a list, each with its time, a short description and a small pie."></div>
+        <div class="shot"><img src="work/event-program-phone.png" width="824" height="1830" loading="lazy" decoding="async" alt="The same program on a phone, in one column. The event name and the venue address, Woodville Town Hall, 74 to 76 Woodville Road, Woodville SA 5011, come first, then the time, 11am. Under that is the large pie for the whole day, a quarter eaten, with the words The expo is open and 3 hours 10 min left. The picture ends with the first session in the list, Welcome and Opening, 10am to 10:15am, with a short description."></div>
         <figcaption>
           <h3>Neurodivergent Entrepreneurs Expo | Attendee Program</h3>
           <p>Same program, now on an attendee's own phone, opened from a QR
           code. Nothing to install and no account to make.</p>
-          <p><a href="work/event-program-phone.png">Open the phone program at full size (PNG, 368 KB)</a></p>
+          <p><a href="work/event-program-phone.png">Open the phone program at full size (PNG, 312 KB)</a></p>
         </figcaption>
       </figure>
       <figure>

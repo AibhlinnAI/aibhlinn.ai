@@ -611,3 +611,244 @@ h1,h2,h3{ text-wrap:balance; }
 .linklist dt{ font-weight:600; margin-top:1rem; }
 .linklist dd{ margin:.25rem 0 0; }
 .work figcaption h3{ margin:0 0 .4rem; font-size:1.05rem; }
+
+/* ============================================================
+   Design refresh, November 2026. Appended only: no rule above this
+   line is edited, so the offer branch still merges. No new text
+   colour pair is made: every text colour here sits on a ground it
+   is already measured on. Nothing here moves. The only transition
+   is a colour change on buttons and top links, and only for
+   visitors who have not asked for less motion.
+   ============================================================ */
+
+:root{
+  --navy-deep:   #070B20;
+  --grid-line:   rgba(206,209,216,.055);
+  --chip:        linear-gradient(145deg, var(--blue-on-white) 0%, var(--navy-glow) 100%);
+  --hair:        rgba(206,209,216,.16);
+  --radius:      20px;
+  --space-section:clamp(56px, 8vw, 96px);
+}
+
+/* ───────── Type scale and rhythm ───────── */
+body{ line-height:1.65; }
+h2{ font-size:clamp(2rem, 1.35rem + 2.8vw, 3.05rem); font-weight:650; letter-spacing:-.026em; line-height:1.08; margin-bottom:.45em; }
+h3{ font-size:1.3rem; font-weight:620; letter-spacing:-.014em; }
+h4{ color:var(--heading); font-size:1.1rem; font-weight:620; letter-spacing:-.01em; line-height:1.25; margin:0 0 .35em; text-wrap:balance; }
+.section{ padding:var(--space-section) 0; }
+/* An alternate section swaps the two grounds: the section takes the
+   card colour and its cards take the page colour. Both pairs are
+   already measured, so no new contrast pair is made. */
+.section--alt{ background:var(--surface); }
+.section--alt .card, .section--alt .steps li{ background:var(--bg); }
+.intro{ font-size:clamp(1.1rem, 1.02rem + .4vw, 1.3rem); line-height:1.5; max-width:56ch; }
+.eyebrow{ margin-bottom:14px; font-size:.875rem; letter-spacing:.12em; }
+/* A short rule before each section label. Inline-block, not flex: a
+   flex label would split "The AibhlínnAI suite" into separate items. */
+.eyebrow::before{ content:""; display:inline-block; vertical-align:middle; width:28px; height:2px; margin:-2px 10px 0 0; border-radius:2px; background:currentColor; opacity:.55; }
+
+/* ───────── Home hero: a larger voice, a quieter logo ───────── */
+.hero{ position:relative; isolation:isolate; }
+.hero:not(.hero--page):not(.lost){
+  background:
+    radial-gradient(ellipse 62% 44% at 50% 26%, var(--navy-glow) 0%, rgba(20,30,72,.5) 40%, transparent 74%),
+    linear-gradient(180deg, var(--navy-deep) 0%, var(--navy) 100%);
+  padding-bottom:clamp(40px, 6vw, 72px);
+  border-bottom:1px solid #1C2445;
+}
+/* A faint drafting grid behind the logo, faded out towards the edges.
+   Decoration only: it sits behind everything and takes no clicks. */
+.hero:not(.hero--page):not(.lost)::before{
+  content:""; position:absolute; inset:0; z-index:-1; pointer-events:none;
+  background-image:
+    linear-gradient(var(--grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+  background-size:56px 56px; background-position:center top;
+  -webkit-mask-image:radial-gradient(ellipse 72% 68% at 50% 28%, #000 0%, transparent 78%);
+          mask-image:radial-gradient(ellipse 72% 68% at 50% 28%, #000 0%, transparent 78%);
+}
+.hero-logo{ max-width:400px; }
+.tagline{
+  margin:0 auto 30px;
+  font-size:clamp(2.25rem, 1.2rem + 5.2vw, 4.4rem);
+  font-weight:650; letter-spacing:-.034em; line-height:1.02;
+}
+.tagline-sub{ margin:-16px auto 28px; font-size:clamp(1.2rem, 1rem + 1vw, 1.7rem); letter-spacing:-.012em; color:var(--ti-upper); }
+.lede{ max-width:60ch; font-size:clamp(1.05rem, 1rem + .3vw, 1.18rem); }
+/* Top links: a soft pill behind the link under the pointer. Below
+   720px nothing changes, so the phone layout of three and two holds. */
+@media (min-width:720px){
+  .nav-links{ gap:0 4px; }
+  .nav-links a{ padding:0 14px; border-radius:999px; }
+  .nav-links a:hover{ background:rgba(206,209,216,.1); text-decoration:none; }
+}
+/* Three facts under the buttons, each already said further down the page. */
+.hero-facts{
+  list-style:none; margin:clamp(28px, 4vw, 40px) auto 0; padding:18px 0 0;
+  display:grid; gap:10px 0; grid-template-columns:1fr; max-width:880px;
+  border-top:1px solid var(--hair);
+  color:var(--ti-lower); font-size:.95rem; font-weight:500; text-align:center;
+}
+@media (min-width:900px){
+  .hero-facts{ grid-template-columns:repeat(3, 1fr); }
+  .hero-facts li + li{ border-left:1px solid var(--hair); }
+}
+.hero-facts li{ padding:0 16px; text-wrap:balance; }
+.hero-facts strong{ display:block; color:var(--ti-upper); font-weight:600; text-wrap:balance; }
+/* The third fact is a link to "How an automation and AI project runs".
+   It keeps the strip's own colours, both already measured on the hero,
+   and is underlined so colour is not the only sign. */
+.hero-facts a{ display:block; min-height:44px; color:inherit; border-radius:8px; }
+
+/* ───────── Buttons ───────── */
+.btn{ padding:13px 24px; letter-spacing:-.005em; }
+@media (prefers-reduced-motion: no-preference){
+  .btn, .nav-links a{ transition:background-color .16s ease, border-color .16s ease, filter .16s ease; }
+}
+
+/* ───────── Cards ───────── */
+/* Cards are not links, so they do not react to the pointer. */
+.card, .steps li{
+  border-radius:var(--radius);
+  box-shadow:inset 0 1px 0 color-mix(in srgb, var(--heading) 14%, transparent), 0 1px 2px rgba(5,8,24,.05);
+}
+.card{ padding:clamp(22px, 3vw, 32px); }
+.card .icon{
+  width:48px; height:48px; margin-bottom:18px; border-radius:14px;
+  background:var(--chip); border:1px solid rgba(206,209,216,.22); color:var(--ti-hi);
+}
+.card h3{ margin-bottom:.45em; }
+.grid{ gap:20px; margin-top:36px; }
+.app-card{ border-radius:24px; margin-top:36px; }
+.next{ border-style:solid; background:color-mix(in srgb, var(--surface) 55%, transparent); }
+/* A card with two links: the first sits on the bottom edge with the
+   others in its row, the second follows it closely. */
+.grid--four .card .card-link--second{ margin-top:0; padding-top:0; }
+
+/* ───────── How a project runs: numbered steps ───────── */
+/* role="list" is on the <ol> in the HTML, because list-style:none
+   stops Safari announcing a list. The numeral is white on blue on
+   white, the light theme's button pair, in both themes. */
+.steps{
+  list-style:none; counter-reset:step; margin:28px 0 0; padding:0;
+  display:grid; gap:20px; grid-template-columns:1fr;
+}
+/* Two by two at most. The page is 1080px wide at its widest, so four
+   across would leave each step a column of three or four words. */
+@media (min-width:640px){ .steps{ grid-template-columns:repeat(2, 1fr); } }
+.steps li, .doc .steps li{
+  counter-increment:step; margin:0; max-width:none;
+  padding:22px 22px 24px; background:var(--surface); border:1px solid var(--line);
+}
+/* The second content line gives the numeral empty alternative text,
+   so a screen reader does not say the position twice. A browser that
+   does not know that syntax keeps the first line. */
+.steps li::before{
+  content:"0" counter(step);
+  content:"0" counter(step) / "";
+  display:grid; place-items:center; width:44px; height:32px; margin-bottom:16px;
+  border-radius:999px; background:var(--blue-on-white); color:#FFFFFF;
+  border:1px solid rgba(206,209,216,.22);
+  font-size:.85rem; font-weight:700; letter-spacing:.06em; font-variant-numeric:tabular-nums;
+}
+.steps h3, .steps h4{ font-size:1.25rem; margin:0 0 .35em; }
+.steps p{ margin:0; max-width:none; }
+.doc .steps{ padding-left:0; margin-bottom:20px; }
+
+/* Two cards side by side. */
+.fit{ display:grid; gap:20px; margin:20px 0; grid-template-columns:1fr; }
+@media (min-width:760px){ .fit{ grid-template-columns:repeat(2, 1fr); } }
+.fit .card-list{ margin-bottom:0; }
+.fit h4{ font-size:1.25rem; }
+.section > .wrap > h3.sub{ margin-top:2.2em; font-size:1.5rem; }
+/* The two ways on from "How a project runs", as buttons, with the
+   address written out under them. */
+.cta{ margin-top:28px; }
+.cta + .addr{ margin:12px 0 0; }
+
+/* ───────── Questions ───────── */
+.faq{ gap:0 48px; margin-top:28px; }
+.faq-item{ padding:22px 0; }
+.faq-item h3, .faq-item h4{ font-size:1.15rem; margin-bottom:.4em; }
+/* An answer breaks where the line ends. The page-wide "pretty"
+   wrapping left short lines beside a hyphenated word. */
+.faq-item p{ text-wrap:wrap; }
+/* One section holds two groups of questions, each under its own h3. */
+.section > .wrap > h3.faq-group{ margin-top:1.4em; font-size:1.5rem; scroll-margin-top:16px; }
+.section > .wrap > h3.faq-group ~ h3.faq-group{ margin-top:2.2em; }
+.faq-group + .faq{ margin-top:14px; }
+h3.faq-group:target{ text-decoration:underline; text-decoration-thickness:3px; text-underline-offset:.2em; }
+
+/* ───────── Business details ───────── */
+.facts{ padding:22px 24px; gap:10px 24px; border-radius:var(--radius); align-items:baseline; }
+.facts dt{ font-size:.92rem; }
+/* Links that stand alone get a target 44px tall. */
+.facts dd a, .linklist dt a{ display:inline-flex; align-items:center; min-height:44px; }
+.linklist dt a{ overflow-wrap:anywhere; }
+
+/* ───────── Contact: two columns on a wide screen ───────── */
+.contact-cols h3{ margin-top:1.6em; }
+@media (min-width:900px){
+  .contact-cols{ display:grid; grid-template-columns:minmax(0, 1.25fr) minmax(0, 1fr); gap:0 56px; align-items:start; }
+  .contact-side h3:first-of-type{ margin-top:0; }
+  .contact-side .facts{ grid-template-columns:max-content minmax(0, 1fr); }
+}
+
+/* ───────── Top links on a very narrow screen ───────── */
+/* If a visitor widens letter and word spacing, three links no longer
+   fit across 320px. The columns may then shrink and a label may take
+   two lines, so nothing is pushed off the screen. With ordinary
+   spacing nothing changes. */
+@media (max-width:479px){
+  .nav-links{ max-width:100%; grid-template-columns:repeat(3, minmax(0, max-content)); }
+  .nav-links a{ white-space:normal; }
+}
+
+/* ───────── Inner pages: a navy head with the page title ───────── */
+/* The same pairs the dark theme uses, as on the promise band. */
+.doc--headed{ padding-top:0; }
+.page-head{
+  --heading:var(--ti); --ink:var(--ti-upper); --muted:var(--ti-lower);
+  --link:var(--ti-upper); --focus:var(--ti-hi);
+  background:linear-gradient(180deg, var(--navy) 0%, var(--navy-lift) 100%);
+  color:var(--ti-upper); border-bottom:1px solid #1C2445;
+  padding:clamp(28px, 5vw, 56px) 0 clamp(32px, 6vw, 64px);
+  margin-bottom:clamp(32px, 6vw, 64px);
+}
+.page-head h1{ font-size:clamp(2.2rem, 1.4rem + 3.4vw, 3.6rem); font-weight:650; letter-spacing:-.03em; line-height:1.05; margin-bottom:.35em; }
+.page-head .intro{ color:var(--ti-upper); margin:0; }
+.page-head .updated{ margin:0; }
+.crumbs ol{ list-style:none; display:flex; flex-wrap:wrap; gap:0 8px; margin:0 0 18px; padding:0; font-size:.92rem; color:var(--ti-lower); }
+.crumbs li, .doc .crumbs li{ margin:0; display:inline-flex; align-items:center; min-height:44px; }
+.crumbs a{ display:inline-flex; align-items:center; min-height:44px; }
+.crumbs li + li::before{ content:"/"; margin-right:8px; color:var(--ti-lower); }
+.doc h2{ font-size:clamp(1.5rem, 1.25rem + 1vw, 1.9rem); margin-top:2.2em; letter-spacing:-.02em; line-height:1.15; }
+.doc .card h2, .doc .card h3{ font-size:1.3rem; }
+.tags li{ padding:.4rem .9rem; background:var(--surface); }
+/* The inner pages' gap between list items does not belong between tags. */
+.doc .tags li + li{ margin-top:0; }
+.doc .tags{ padding-left:0; }
+
+/* ───────── Footer ───────── */
+.foot{ padding-top:56px; border-top:1px solid #1C2445; }
+.foot .promise{ font-size:1.2rem; letter-spacing:-.01em; }
+
+@media (forced-colors: active){
+  .eyebrow::before{ background:CanvasText; opacity:1; }
+  .steps li::before{ border:1px solid CanvasText; }
+  .hero-facts, .hero-facts li + li{ border-color:CanvasText; }
+}
+@media print{
+  .hero::before{ display:none; }
+  .hero:not(.hero--page):not(.lost){ background:none; border-bottom:0; padding-bottom:0; }
+  .tagline-sub{ color:var(--ink); }
+  .tagline{ margin-top:14px; }
+  .section--alt{ background:none; }
+  .page-head{ background:none; color:var(--ink); border:0; padding:0; margin-bottom:16px;
+    --heading:var(--blue-on-white); --ink:#141A33; --muted:#4B5470; --link:var(--blue-on-white); }
+  .page-head .intro, .crumbs ol{ color:var(--ink); }
+  .hero-facts{ color:var(--ink); border:0; }
+  .hero-facts strong{ color:var(--ink); }
+  .steps li{ break-inside:avoid; box-shadow:none; }
+  .steps li::before, .card .icon{ print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+}
