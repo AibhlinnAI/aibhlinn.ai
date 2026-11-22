@@ -26,11 +26,12 @@ with far less reason to break them:
 - **Prices and dates: only the launch offer, and only while it runs.** Since
   22 Nov 2026, the day Pie Timers went public on Google Play, `index.html`
   advertises the Black Friday Launch Offer. It quotes the launch price
-  (A$2.90 a month or A$19 a year), the subscribe-by date (5 December 2026),
-  the first payment date (1 January 2027), the 100 Foundation places and
-  the closing date (the end of 5 December 2026, Adelaide time). This
-  replaces the old rule of no prices and no dates, which Mal overruled on
-  22 Nov 2026.
+  (A$2.90 a month or A$19 a year), the first payment date (from 1 January
+  2027), the 100 Foundation places and the closing date (the end of
+  31 December 2026, Adelaide time). This replaces the old rule of no prices
+  and no dates, which Mal overruled on 22 Nov 2026. Mal revised the offer's
+  terms the same day: the hook lost its subscribe-by date, and the close
+  moved from the end of 5 December to the end of 31 December.
   - The same price and dates live in `pie-timers-app`. Its `CLAUDE.md` keeps
     the one list of where, under "The launch dates live in several places".
     That list is not copied here, because a copy went stale within a day.
@@ -45,22 +46,32 @@ with far less reason to break them:
     `foundation.html` and check it says Black Friday Launch Offer before
     merging here.
   - "Pay nothing until 2027" is only true with its condition. Keep it right
-    beside the "subscribe by 5 December 2026 (Adelaide time) while your free
-    trial is running" sentence, wherever it appears. The offer closes at
-    Adelaide midnight, which is earlier on 5 December everywhere to the
-    west, so the date always carries "(Adelaide time)".
-  - The offer is two things with two closing rules. The date offer (pay
-    nothing until 2027) closes at the end of 5 December 2026 (Adelaide
-    time) and not before. Foundation (the price lock, 100 places) closes
-    then too, or sooner if all 100 places are taken. A full Foundation does
-    not end the date offer.
+    beside the sentence "Subscribe while your free trial is running and
+    your first payment is taken from 1 January 2027", wherever it appears.
+    Always "from 1 January 2027", never "on": the first payment is taken at
+    12:00 UTC on 1 January, which is early on 2 January in New Zealand.
+    The hook has no subscribe-by date. "Subscribe by 5 December" was its
+    condition for a few hours on 22 Nov 2026 and Mal took it off: do not
+    put it back.
+  - The offer is two things. The hook (pay nothing until 2027) is true for
+    anyone who subscribes while their free trial is running, and stays on
+    this page to the end of 31 December 2026 (Adelaide time). Foundation
+    (the price lock, 100 places) closes at the end of 31 December 2026
+    (Adelaide time), or sooner if all 100 places are taken. A full
+    Foundation does not end the hook. The close is Adelaide midnight, which
+    is still 31 December everywhere to the west, so the date always carries
+    "(Adelaide time)".
   - The page has no JavaScript, so it cannot count places or hide the offer.
-    If Foundation fills before 5 December, remove by hand the Foundation
-    paragraph in the offer block of `index.html` and the second sentence of
-    its closing paragraph, and leave the rest. When the offer closes, on
-    6 December 2026, remove the offer line in the hero and the whole offer
-    block in the Pie Timers card. Each is marked with an HTML comment. The
-    `.offer` and `.hero-offer` rules in `site.css` can go with them.
+    If Foundation fills before the end of 31 December, remove by hand the
+    Foundation paragraph in the offer block of `index.html` and the second
+    sentence of its closing paragraph, and leave the rest. The whole advert
+    comes down on 1 January 2027: remove the offer line in the hero and
+    the whole offer block in the Pie Timers card. Each is marked with an
+    HTML comment. The `.offer` and `.hero-offer` rules in `site.css` can go
+    with them.
+  - 5 December 2026 is not on this page and must not be. The only thing
+    that still ends then is the free trial of a Pie Timers account made
+    before 22 November 2026, which the app's own pages explain.
   - Outside an offer, link to `pricing.html` instead of quoting a price.
 - **No Play steering risk.** The Google Play app never links here. This is
   what lets this page show a price and a dated invitation to subscribe,
