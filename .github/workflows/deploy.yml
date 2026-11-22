@@ -7,6 +7,11 @@
 # no-ads-no-tracking promise in the footer of index.html is meant to be
 # enforced, not just stated.
 #
+# The steps after the first three are this site's own. They hold it to
+# the rest of what it promises: no JavaScript, nothing loaded from any
+# other host, no inline styles, and every page complete, with working
+# local links. README.md, "What the deploy guard checks", lists them.
+#
 # There is no build step. The files the browser runs are the files in
 # the repo. The deploy uploads the repo root minus the repo's own
 # plumbing (.git, .github, README.md).
@@ -64,6 +69,172 @@ jobs:
           fi
           echo "Every published ABN is held together."
 
+      # This site promises no JavaScript at all. The one script tag allowed
+      # is the JSON-LD data block on the home page, which is data for
+      # search engines and never runs. It must be written exactly as
+      # <script type="application/ld+json"> to pass.
+      - name: Refuse to publish JavaScript
+        run: |
+          set -u
+          X='--exclude-dir=.git --exclude-dir=.github'
+          fail=0
+          if grep -rniE $X --include='*.html' '<script' . | grep -viE '<script type="application/ld\+json">'; then
+            echo "::error::A script tag other than the JSON-LD data block was found."
+            fail=1
+          fi
+          if grep -rniE $X --include='*.html' "[[:space:]]on[a-z]+[[:space:]]*=[[:space:]]*[\"']|javascript:" .; then
+            echo "::error::An event handler attribute or a javascript: address was found."
+            fail=1
+          fi
+          if find . -path ./.git -prune -o -path ./.github -prune -o \( -name '*.js' -o -name '*.mjs' \) -print | grep .; then
+            echo "::error::A JavaScript file was found. This site ships none."
+            fail=1
+          fi
+          if [ "$fail" -ne 0 ]; then exit 1; fi
+          echo "No JavaScript found."
+
+      # Every image, font and stylesheet comes from this repo. Ordinary
+      # <a href> links, the canonical link and the og: tags may point
+      # elsewhere, because none of them loads anything. Keep every <link>
+      # tag on one line, or the second check cannot read it. Forms and
+      # media players are refused too: contact is by email, and nothing on
+      # this site moves or plays. Styles live in site.css only, because
+      # each page's Content-Security-Policy blocks inline ones.
+      - name: Refuse third-party loads, embeds and inline styles
+        run: |
+          set -u
+          X='--exclude-dir=.git --exclude-dir=.github'
+          fail=0
+          if grep -rniE $X --include='*.html' --include='*.css' "(src|srcset|poster)[[:space:]]*=[[:space:]]*[\"']?[[:space:]]*(https?:)?//|url\([[:space:]]*[\"']?[[:space:]]*(https?:)?//|@import" .; then
+            echo "::error::Something is loaded from another host, or a stylesheet is imported."
+            fail=1
+          fi
+          if grep -rniE $X --include='*.html' "<link[^>]*href[[:space:]]*=[[:space:]]*[\"']?(https?:)?//" . | grep -viE 'rel="canonical"'; then
+            echo "::error::A link tag other than the canonical one points at another host."
+            fail=1
+          fi
+          if grep -rniE $X --include='*.html' '<(iframe|embed|object|form|input|button|textarea|select|video|audio|base)([[:space:]>]|$)' .; then
+            echo "::error::An embed, form control, media player or base tag was found."
+            fail=1
+          fi
+          if grep -rniE $X --include='*.html' "<style|[[:space:]]style[[:space:]]*=" .; then
+            echo "::error::An inline style was found. Put it in site.css."
+            fail=1
+          fi
+          if [ "$fail" -ne 0 ]; then exit 1; fi
+          echo "Nothing is loaded from another host, and there are no embeds, forms or inline styles."
+
+      - name: Check every page is complete
+        run: |
+          set -u
+          csp="<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'\">"
+          fail=0
+          need() {
+            # need FILE TEXT WHAT
+            if ! grep -qF -- "$2" "$1"; then
+              echo "::error file=$1::$1 is missing $3."
+              fail=1
+            fi
+          }
+          pages=$(find . -path ./.git -prune -o -path ./.github -prune -o -name '*.html' -print | sed 's|^\./||' | sort)
+          if [ -z "$pages" ]; then echo "::error::No pages found."; exit 1; fi
+          for f in $pages; do
+            need "$f" "$csp" "the Content-Security-Policy meta tag, written exactly as on the other pages"
+            need "$f" '<meta name="referrer" content="no-referrer">' "the referrer meta tag"
+            need "$f" '<title>' "a title"
+            if [ "$f" = "404.html" ]; then
+              need "$f" '<meta name="robots" content="noindex">' "its noindex tag"
+            else
+              need "$f" '<meta name="description" content="' "a meta description"
+              need "$f" '<link rel="canonical" href="https://aibhlinn.ai/' "a canonical link to https://aibhlinn.ai/"
+              need "$f" 'No ads. No tracking. No selling your data. Ever.' "the footer promise"
+            fi
+          done
+          for f in privacy.html terms.html; do
+            if [ ! -f "$f" ]; then echo "::error::$f is missing."; fail=1; continue; fi
+            need "$f" 'NOT YET REVIEWED BY A LAWYER' "the comment saying no lawyer has read it"
+          done
+          if [ "$fail" -ne 0 ]; then exit 1; fi
+          echo "Every page is complete."
+
+      - name: Check structured data, local links and the sitemap
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, re, sys
+
+          root = pathlib.Path('.')
+          skip = {'.git', '.github', 'site'}
+          pages = sorted(p for p in root.rglob('*.html') if not (set(p.parts) & skip))
+          errors = []
+          ids = {}
+
+          def body(p):
+              # HTML comments are notes for editors, not links.
+              return re.sub(r'<!--.*?-->', '', p.read_text(encoding='utf-8'), flags=re.S)
+
+          def ids_of(f):
+              if f not in ids:
+                  ids[f] = set(re.findall(r'\bid\s*=\s*["\']([^"\']+)["\']', body(f)))
+              return ids[f]
+
+          for p in pages:
+              text = body(p)
+              for m in re.finditer(r'<script type="application/ld\+json">(.*?)</script>', text, re.S):
+                  try:
+                      json.loads(m.group(1))
+                  except ValueError as e:
+                      errors.append(f'{p}: the JSON-LD block does not parse: {e}')
+              for attr, value in re.findall(r'\b(href|src|srcset)\s*=\s*["\']([^"\']*)["\']', text):
+                  parts = [c.split()[0] for c in value.split(',') if c.split()] if attr == 'srcset' else [value.strip()]
+                  for target in parts:
+                      if re.match(r'(?i)(https?:|mailto:)', target):
+                          continue
+                      path, _, frag = target.partition('#')
+                      path = path.split('?')[0]
+                      if path == '':
+                          f = p
+                      elif path.startswith('/'):
+                          f = root / path.lstrip('/')
+                      else:
+                          f = p.parent / path
+                      if f.is_dir():
+                          f = f / 'index.html'
+                      if not f.is_file():
+                          errors.append(f'{p}: {attr}="{target}" points at a file that is not in the repo')
+                      elif frag and f.suffix == '.html' and frag not in ids_of(f):
+                          errors.append(f'{p}: {attr}="{target}" points at an id that is not in {f}')
+
+          site = 'https://aibhlinn.ai/'
+          sitemap = root / 'sitemap.xml'
+          locs = re.findall(r'<loc>\s*(.*?)\s*</loc>', sitemap.read_text(encoding='utf-8')) if sitemap.is_file() else []
+          if not locs:
+              errors.append('sitemap.xml is missing or lists nothing')
+          for loc in locs:
+              if not loc.startswith(site):
+                  errors.append(f'sitemap.xml: {loc} is not on {site}')
+                  continue
+              f = root / loc[len(site):]
+              if f.is_dir():
+                  f = f / 'index.html'
+              if not f.is_file():
+                  errors.append(f'sitemap.xml: {loc} has no file in the repo')
+              elif f.name == '404.html':
+                  errors.append('sitemap.xml must never list 404.html')
+          for p in pages:
+              rel = p.as_posix()
+              if p.name == '404.html':
+                  continue
+              url = site + (rel[:-len('index.html')] if p.name == 'index.html' else rel)
+              if url not in locs:
+                  errors.append(f'sitemap.xml does not list {url}')
+
+          for e in errors:
+              print(f'::error::{e}')
+          if errors:
+              sys.exit(1)
+          print(f'{len(pages)} pages: structured data parses, local links resolve, and the sitemap matches.')
+          PY
+
   deploy:
     needs: guard
     runs-on: ubuntu-latest
@@ -80,6 +251,14 @@ jobs:
           mkdir -p site
           rsync -a --exclude='.git' --exclude='.github' --exclude='site' --exclude='README.md' ./ site/
 
+      - name: Check robots.txt and the sitemap are in the published site
+        run: |
+          test -f site/robots.txt
+          test -f site/sitemap.xml
+          echo "robots.txt and sitemap.xml are in the published site."
+
+      # Stay on v3. From v4 this action leaves dot-files out of the
+      # artifact, and .nojekyll is one.
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

@@ -3,8 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="format-detection" content="telephone=no">
 <title>AibhlínnAI | Aim for the gap</title>
-<meta name="description" content="AibhlínnAI, from South Australia. Aim for the gap. Apps, neuro-affirming event support, automation and AI consultancy, and neurodivergence advocacy.">
+<meta name="description" content="AibhlínnAI, from South Australia. Makers of Pie Timers. Neuro-affirming event support, automation and AI consultancy, and neurodivergence advocacy.">
 <link rel="canonical" href="https://aibhlinn.ai/">
 <meta name="theme-color" content="#050818">
 <meta name="color-scheme" content="light dark">
@@ -24,30 +27,63 @@
 <meta property="og:image" content="https://aibhlinn.ai/og-image.jpg">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
 <meta property="og:image:alt" content="The AibhlínnAI logo: a silver Aí monogram above the name, on deep navy.">
 <meta property="og:locale" content="en_AU">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="The AibhlínnAI logo: a silver Aí monogram above the name, on deep navy.">
 
 <!-- Data for search engines, not a script: nothing here runs. The
-     alternate spelling is how most people will type the name. -->
+     alternate spelling is how most people will type the name.
+     Pie Timers has no offers, price or rating fields on purpose. Do not
+     add a price of 0 to quieten a rich-results warning. -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "AibhlínnAI",
-  "alternateName": "AibhlinnAI",
-  "url": "https://aibhlinn.ai/",
-  "slogan": "Aim for the gap.",
-  "description": "Apps, neuro-affirming event support, automation and AI consultancy, and neurodivergence advocacy.",
-  "logo": "https://aibhlinn.ai/aibhlinn-mark-512.png",
-  "email": "hello@aibhlinn.ai",
-  "taxID": "70 810 791 817",
-  "address": { "@type": "PostalAddress", "addressRegion": "SA", "addressCountry": "AU" },
-  "sameAs": [
-    "https://www.instagram.com/aibhlinnai/",
-    "https://www.facebook.com/profile.php?id=61594621506691",
-    "https://discord.gg/QBrc9UkZpZ",
-    "https://github.com/AibhlinnAI"
+  "@graph": [
+    {
+      "@type": "Organization",
+      "@id": "https://aibhlinn.ai/#organisation",
+      "name": "AibhlínnAI",
+      "alternateName": "AibhlinnAI",
+      "url": "https://aibhlinn.ai/",
+      "slogan": "Aim for the gap.",
+      "description": "Apps, neuro-affirming event support, automation and AI consultancy, and neurodivergence advocacy.",
+      "image": "https://aibhlinn.ai/og-image.jpg",
+      "logo": { "@type": "ImageObject", "url": "https://aibhlinn.ai/aibhlinn-mark-512.png", "width": 512, "height": 512 },
+      "email": "hello@aibhlinn.ai",
+      "contactPoint": [
+        { "@type": "ContactPoint", "contactType": "customer support", "email": "support@aibhlinn.ai" },
+        { "@type": "ContactPoint", "contactType": "general enquiries", "email": "hello@aibhlinn.ai" }
+      ],
+      "taxID": "70 810 791 817",
+      "address": { "@type": "PostalAddress", "addressRegion": "SA", "addressCountry": "AU" },
+      "sameAs": [
+        "https://www.instagram.com/aibhlinnai/",
+        "https://www.facebook.com/profile.php?id=61594621506691",
+        "https://discord.gg/QBrc9UkZpZ",
+        "https://github.com/AibhlinnAI"
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://aibhlinn.ai/#website",
+      "url": "https://aibhlinn.ai/",
+      "name": "AibhlínnAI",
+      "alternateName": "AibhlinnAI",
+      "inLanguage": "en-AU",
+      "publisher": { "@id": "https://aibhlinn.ai/#organisation" }
+    },
+    {
+      "@type": "SoftwareApplication",
+      "@id": "https://pietimers.aibhlinn.ai/#app",
+      "name": "Pie Timers",
+      "description": "Pie Timers shows how much of your day is left as a shrinking pie.",
+      "url": "https://pietimers.aibhlinn.ai/",
+      "operatingSystem": "Android, Web browser",
+      "installUrl": "https://play.google.com/store/apps/details?id=ai.aibhlinn.pietimers",
+      "publisher": { "@id": "https://aibhlinn.ai/#organisation" }
+    }
   ]
 }
 </script>
@@ -62,7 +98,8 @@
     </a>
     <ul class="nav-links">
       <li><a href="#what-we-do">What we do</a></li>
-      <li><a href="#promise">Our promise</a></li>
+      <li><a href="#pie-timers">Pie Timers</a></li>
+      <li><a href="#promise">Promise</a></li>
       <li><a href="#contact">Contact</a></li>
     </ul>
   </nav>
@@ -75,7 +112,8 @@
       </picture>
     </h1>
     <p class="tagline">Aim for the gap.</p>
-    <p class="lede">Apps, neuro-affirming event support, automation and AI
+    <p class="lede">We make small, calm apps, starting with Pie Timers. We
+    also offer <span class="nb">neuro-affirming</span> event support, automation and AI
     consultancy, and neurodivergence advocacy.</p>
     <div class="actions">
       <a class="btn btn-metal" href="https://pietimers.aibhlinn.ai/">Try Pie Timers free</a>
@@ -84,7 +122,7 @@
   </div>
 </header>
 
-<main id="main">
+<main id="main" tabindex="-1">
 
   <!-- The four functional areas of AibhlínnAI. "Simple tools for busy
        minds" belongs to the app suite only, never to the company. -->
@@ -97,7 +135,8 @@
           <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.8"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.8"/><circle cx="17" cy="17" r="3.5"/></svg></div>
           <h3>Apps</h3>
           <p>The AibhlínnAI suite: simple tools for busy minds. It starts
-          with Pie Timers.</p>
+          with Pie Timers, which runs in your browser and is on Google
+          Play.</p>
           <p class="card-link"><a href="#apps">See the apps</a></p>
         </div>
         <div class="card">
@@ -113,7 +152,7 @@
           and on phones. Attendees can check what is on, what is next and
           how long is left, without having to ask. They have nothing to
           install and no account to make.</p>
-          <p class="card-link"><a href="mailto:hello+events@aibhlinn.ai?subject=Neuro-affirming%20event%20support">Ask about your event</a></p>
+          <p class="card-link"><a href="mailto:hello+events@aibhlinn.ai?subject=Neuro-affirming%20event%20support">Email us about your event</a><span class="addr">hello+events@aibhlinn.ai</span></p>
         </div>
         <div class="card">
           <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg></div>
@@ -121,7 +160,7 @@
           <p>Practical help finding the work that automation and AI can
           take on in your organisation. We start with a small pilot, so you
           can see whether it helps before anything is rolled out.</p>
-          <p class="card-link"><a href="mailto:hello+consult@aibhlinn.ai?subject=Automation%20and%20AI">Start a conversation</a></p>
+          <p class="card-link"><a href="mailto:hello+consult@aibhlinn.ai?subject=Automation%20and%20AI">Email us about automation and AI</a><span class="addr">hello+consult@aibhlinn.ai</span></p>
         </div>
         <div class="card">
           <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/></svg></div>
@@ -130,7 +169,7 @@
           people at work and in everyday life. It shapes how we build: our
           no-ads, no-tracking rule came straight from the people our apps
           are for.</p>
-          <p class="card-link"><a href="mailto:hello+advocacy@aibhlinn.ai?subject=Neurodivergence%20advocacy">Get in touch</a></p>
+          <p class="card-link"><a href="mailto:hello+advocacy@aibhlinn.ai?subject=Neurodivergence%20advocacy">Email us about advocacy</a><span class="addr">hello+advocacy@aibhlinn.ai</span></p>
         </div>
       </div>
     </div>
@@ -146,7 +185,7 @@
       <p class="intro">Small, calm apps that ask very little of your
       attention. The first one shows your day as a pie.</p>
 
-      <article class="app-card" aria-labelledby="pt-title">
+      <article class="app-card" id="pie-timers" aria-labelledby="pt-title">
         <div class="app-tile" aria-hidden="true">
           <!-- The app's own mark, from app/index.html. -->
           <svg viewBox="0 0 32 32">
@@ -166,11 +205,12 @@
             can add it to your home screen if you like.</li>
             <li><strong>Premium adds the extras.</strong> Sync between devices,
             calendar connection and alerts when the app is closed.</li>
-            <li><strong>Android app now in testing.</strong> Open Pie Timers on
-            an Android phone to join the testing list.</li>
+            <li><strong>Now on Google Play.</strong> Install Pie Timers on an
+            Android phone or tablet.</li>
           </ul>
           <div class="actions">
             <a class="btn btn-primary" href="https://pietimers.aibhlinn.ai/">Open Pie Timers</a>
+            <a class="btn btn-ghost" href="https://play.google.com/store/apps/details?id=ai.aibhlinn.pietimers">Get it on Google Play</a>
             <a class="btn btn-ghost" href="https://pietimers.aibhlinn.ai/pricing.html">See pricing</a>
           </div>
         </div>
@@ -184,7 +224,69 @@
     </div>
   </section>
 
-  <section class="section" id="promise" aria-labelledby="promise-title">
+  <!-- Each answer restates the published Pie Timers terms and privacy
+       policy (pie-timers-app app/terms.html sections 2 to 6, and
+       app/privacy.html section 9). If those change, change these with
+       them. No price, no trial length and no date here: link to
+       pricing.html instead. -->
+  <section class="section" id="questions" aria-labelledby="q-title">
+    <div class="wrap">
+      <p class="eyebrow">Pie Timers</p>
+      <h2 id="q-title">Questions</h2>
+      <div class="faq">
+        <div class="faq-item">
+          <h3>Is Pie Timers really free?</h3>
+          <p>Yes. Everything that works on one device is free, permanently:
+          the timers, your weekly schedule, appointments, the calculator,
+          and alerts while the app is open.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do I need an account?</h3>
+          <p>No. Pie Timers works without one, and offline. An account is
+          only needed to sync between devices and to get alerts when the
+          app is closed. You sign in with a one-time code sent to your
+          email, or with Google, so there is no password to create.</p>
+        </div>
+        <div class="faq-item">
+          <h3>What does Premium add?</h3>
+          <p>Sync between devices, a read-only calendar connection, and
+          alerts when the app is closed. Every new account gets a free
+          trial. No card is required, and nothing is charged automatically
+          when the trial ends.
+          <a href="https://pietimers.aibhlinn.ai/pricing.html">See pricing</a>.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Who do I pay, and can I get a refund?</h3>
+          <p>If you subscribe on the web, you buy from Paddle, our payment
+          provider, and your receipt will show Paddle. You can cancel at
+          any time. If the app has not worked for you, write to
+          <a href="mailto:support@aibhlinn.ai">support@aibhlinn.ai</a>
+          within 30 days and we will ask Paddle to refund you. The
+          <a href="https://pietimers.aibhlinn.ai/terms.html#refunds">Pie Timers Refund Policy</a>
+          has the details.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Do you show ads or track me?</h3>
+          <p>No ads and no third-party trackers, and we never sell your
+          data. This website sets no cookies and has no analytics. Pie
+          Timers counts the first time it opens, in a browser or in the
+          Android app, as a daily total with no name, account or ID
+          attached. Like any web request, that one reaches our database
+          provider with your IP address. The
+          <a href="https://pietimers.aibhlinn.ai/privacy.html">Pie Timers Privacy Policy</a>
+          explains how.</p>
+        </div>
+        <div class="faq-item">
+          <h3>Is Pie Timers a medical tool?</h3>
+          <p>No. It is a visual aid. It is not a medical device, a clinical
+          tool or a substitute for professional advice, and it should not
+          be your only reminder for anything that matters.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section section--navy" id="promise" aria-labelledby="promise-title">
     <div class="wrap">
       <p class="eyebrow">How we build</p>
       <h2 id="promise-title">Our promise</h2>
@@ -196,7 +298,8 @@
           <h3>No ads. No tracking. Ever.</h3>
           <p>We never sell your data or share it for marketing. Each time we publish, an
           automatic check stops the release if a known advertising or tracking
-          service has crept into the code.</p>
+          service has crept into the code. This website runs no scripts, sets
+          no cookies and loads nothing from anyone else.</p>
         </div>
         <div class="card">
           <div class="icon" aria-hidden="true">
@@ -215,56 +318,48 @@
           and tomorrow there is another one.</p>
         </div>
       </div>
-    </div>
-  </section>
-
-  <section class="section" id="brand" aria-labelledby="brand-title">
-    <div class="wrap">
-      <p class="eyebrow">For event organisers and media</p>
-      <h2 id="brand-title">Brand kit</h2>
-      <p class="intro">Listing us in a program, on a stall map or in an
-      article? Use these files and colours.</p>
-
-      <div class="kit">
-        <figure>
-          <div class="art"><img src="logo.jpg" width="1024" height="576" alt="" loading="lazy"></div>
-          <figcaption>
-            <a href="aibhlinn-logo.png" download>Download the logo</a>
-            <span class="muted">PNG, 1024 × 576</span>
-          </figcaption>
-        </figure>
-        <figure>
-          <div class="art art--mark"><img src="aibhlinn-mark-512.png" width="512" height="512" alt="" loading="lazy"></div>
-          <figcaption>
-            <a href="aibhlinn-mark-512.png" download>Download the mark</a>
-            <span class="muted">PNG, 512 × 512</span>
-          </figcaption>
-        </figure>
-      </div>
-
-      <ul class="swatches">
-        <li><span class="chip" style="--c:#050818" aria-hidden="true"></span><strong>Brand blue <code>#050818</code></strong><span class="use">Backgrounds and dark surfaces</span></li>
-        <li><span class="chip" style="--c:#2E3A63" aria-hidden="true"></span><strong>Blue on white <code>#2E3A63</code></strong><span class="use">The name on light backgrounds</span></li>
-        <li><span class="chip chip--metal" aria-hidden="true"></span><strong>Titanium <code>#CED1D8</code></strong><span class="use">The name on dark backgrounds</span></li>
-      </ul>
-
-      <p class="say">Say it: <strong>AIV-leen A-I</strong></p>
-      <p class="muted">Write the name as <strong>AibhlínnAI</strong>: one word,
-      mixed case, never all capitals. If you cannot type the accent,
-      AibhlinnAI is fine.</p>
+      <p class="proof">Check it yourself: read the
+      <a href="https://pietimers.aibhlinn.ai/privacy.html">Pie Timers Privacy Policy</a>,
+      the <a href="https://pietimers.aibhlinn.ai/visits.js">code that counts first opens</a>,
+      or this site's <a href="privacy.html">privacy notice</a>.</p>
     </div>
   </section>
 
   <section class="section" id="contact" aria-labelledby="contact-title">
-    <div class="wrap narrow">
+    <div class="wrap">
       <p class="eyebrow">Contact</p>
       <h2 id="contact-title">Get in touch</h2>
       <p>An event, a consultancy project, advocacy, or just hello? Email us.</p>
       <p><a class="email" href="mailto:hello@aibhlinn.ai">hello@aibhlinn.ai</a></p>
       <p>Need help with one of our apps? Write to
       <a href="mailto:support@aibhlinn.ai">support@aibhlinn.ai</a>.</p>
-      <p class="muted">AibhlínnAI is a small independent business in South
-      Australia. ABN&nbsp;70&nbsp;810&nbsp;791&nbsp;817.</p>
+      <p class="muted">These links open your email app. You can also copy
+      the address.</p>
+
+      <h3>Asking about an event?</h3>
+      <p>It helps to tell us:</p>
+      <ul class="card-list">
+        <li>the event name and dates</li>
+        <li>roughly how many people are coming</li>
+        <li>what you would like help with: planned breaks, quiet space
+        times, a plain language program, or live pies on screen.</li>
+      </ul>
+      <p>Something gone wrong?
+      <a href="terms.html#problems">How to tell us about a problem</a>.</p>
+
+      <!-- "ABN" and its number sit in separate elements on purpose: the
+           deploy guard fails when the letters are followed by a plain
+           space and a digit. -->
+      <h3>Business details</h3>
+      <p>AibhlínnAI is a small independent AI studio in South Australia.</p>
+      <dl class="facts">
+        <dt>Name</dt><dd>AibhlínnAI</dd>
+        <dt>Say it</dt><dd>AYV-leen A-I</dd>
+        <dt>ABN</dt><dd>70&nbsp;810&nbsp;791&nbsp;817</dd>
+        <dt>Based in</dt><dd>South Australia, Australia</dd>
+        <dt>Enquiries</dt><dd><a href="mailto:hello@aibhlinn.ai">hello@aibhlinn.ai</a></dd>
+        <dt>App support</dt><dd><a href="mailto:support@aibhlinn.ai">support@aibhlinn.ai</a></dd>
+      </dl>
     </div>
   </section>
 
@@ -274,21 +369,42 @@
   <div class="wrap">
     <p class="promise">No ads. No tracking. No selling your data. Ever.</p>
     <p>This site sets no cookies and has no analytics.</p>
-    <nav class="foot-links" aria-label="Footer">
-      <a href="https://pietimers.aibhlinn.ai/">Pie Timers</a>
-      <a href="https://pietimers.aibhlinn.ai/privacy.html">Pie Timers Privacy Policy</a>
-      <a href="https://pietimers.aibhlinn.ai/terms.html">Pie Timers Terms of Service</a>
-      <a href="mailto:hello@aibhlinn.ai">Contact</a>
-    </nav>
-    <!-- Plain links only. An embedded feed or share button would load the
-         platform's tracking code onto this page and break the promise
-         above. rel="me" says these accounts belong to this site. -->
-    <nav class="foot-links foot-social" aria-label="AibhlínnAI elsewhere">
-      <a href="https://www.instagram.com/aibhlinnai/" rel="me noopener">Instagram</a>
-      <a href="https://www.facebook.com/profile.php?id=61594621506691" rel="me noopener">Facebook</a>
-      <a href="https://discord.gg/QBrc9UkZpZ" rel="me noopener">Discord</a>
-      <a href="https://github.com/AibhlinnAI" rel="me noopener">GitHub</a>
-    </nav>
+    <div class="foot-groups">
+      <nav aria-labelledby="foot-site">
+        <h2 class="foot-label" id="foot-site">This website</h2>
+        <ul class="foot-list">
+          <li><a href="privacy.html">Privacy</a></li>
+          <li><a href="terms.html">Website terms</a></li>
+          <li><a href="accessibility.html">Accessibility</a></li>
+          <li><a href="brand.html">Brand kit</a></li>
+          <li><a href="./#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <nav aria-labelledby="foot-pt">
+        <h2 class="foot-label" id="foot-pt">Pie Timers</h2>
+        <ul class="foot-list">
+          <li><a href="https://pietimers.aibhlinn.ai/">Open Pie Timers</a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=ai.aibhlinn.pietimers">Pie Timers on Google Play</a></li>
+          <li><a href="https://pietimers.aibhlinn.ai/pricing.html">Pie Timers pricing</a></li>
+          <li><a href="https://pietimers.aibhlinn.ai/privacy.html">Pie Timers Privacy Policy</a></li>
+          <li><a href="https://pietimers.aibhlinn.ai/terms.html">Pie Timers Terms of Service</a></li>
+          <li><a href="https://pietimers.aibhlinn.ai/terms.html#refunds">Pie Timers Refund Policy</a></li>
+          <li><a href="https://pietimers.aibhlinn.ai/privacy.html#delete">Delete your Pie Timers account</a></li>
+        </ul>
+      </nav>
+      <!-- Plain links only. An embedded feed or share button would load the
+           platform's tracking code onto this page and break the promise
+           above. rel="me" says these accounts belong to this site. -->
+      <nav aria-labelledby="foot-else">
+        <h2 class="foot-label" id="foot-else">Elsewhere</h2>
+        <ul class="foot-list">
+          <li><a href="https://www.instagram.com/aibhlinnai/" rel="me noopener">Instagram</a></li>
+          <li><a href="https://www.facebook.com/profile.php?id=61594621506691" rel="me noopener">Facebook</a></li>
+          <li><a href="https://discord.gg/QBrc9UkZpZ" rel="me noopener">Discord</a></li>
+          <li><a href="https://github.com/AibhlinnAI" rel="me noopener">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
     <p class="fine">© AibhlínnAI · ABN&nbsp;70&nbsp;810&nbsp;791&nbsp;817 · South Australia</p>
   </div>
 </footer>

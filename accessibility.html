@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en-AU">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="format-detection" content="telephone=no">
+<title>Accessibility | AibhlínnAI</title>
+<meta name="description" content="How the AibhlínnAI website is built to be calm and easy to use, what is not perfect yet, and how to tell us if something is hard to use.">
+<link rel="canonical" href="https://aibhlinn.ai/accessibility.html">
+<meta name="theme-color" content="#050818">
+<meta name="color-scheme" content="light dark">
+<link rel="icon" href="favicon.ico" sizes="16x16 32x32 48x48">
+<link rel="icon" type="image/png" sizes="80x80" href="aibhlinn-mark-80.png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<link rel="preload" href="fonts/instrument-sans-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="site.css">
+
+<!-- Link previews (WhatsApp, LinkedIn, Discord, Teams). The image and the
+     URL must be absolute, so these assume the site is live at aibhlinn.ai. -->
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="AibhlínnAI">
+<meta property="og:title" content="Accessibility | AibhlínnAI">
+<meta property="og:description" content="How the AibhlínnAI website is built to be calm and easy to use, what is not perfect yet, and how to tell us if something is hard to use.">
+<meta property="og:url" content="https://aibhlinn.ai/accessibility.html">
+<meta property="og:image" content="https://aibhlinn.ai/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:type" content="image/jpeg">
+<meta property="og:image:alt" content="The AibhlínnAI logo: a silver Aí monogram above the name, on deep navy.">
+<meta property="og:locale" content="en_AU">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image:alt" content="The AibhlínnAI logo: a silver Aí monogram above the name, on deep navy.">
+</head>
+<!-- Every line under "What we have done" is a claim someone can test. If
+     a change to the site makes one untrue, fix the site or remove the
+     line. This page names no standard and claims no conformance level on
+     purpose. -->
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="hero hero--page">
+  <nav class="bar wrap" aria-label="Main">
+    <a class="brand" href="./" aria-label="AibhlínnAI home"><img src="aibhlinn-mark-80.png" width="40" height="40" alt=""><span class="brand-name">AibhlínnAI</span></a>
+    <ul class="nav-links">
+      <li><a href="./#what-we-do">What we do</a></li>
+      <li><a href="./#pie-timers">Pie Timers</a></li>
+      <li><a href="./#promise">Promise</a></li>
+      <li><a href="./#contact">Contact</a></li>
+    </ul>
+  </nav>
+</header>
+
+<main id="main" tabindex="-1" class="doc">
+  <div class="wrap">
+    <h1>Accessibility</h1>
+    <p>This page is about the website at aibhlinn.ai. We want it to be calm
+    and easy to use for everyone.</p>
+
+    <h2>What we have done</h2>
+    <ul>
+      <li>The site runs no scripts, so it works with scripts turned off.</li>
+      <li>Nothing moves, plays, pops up or times out.</li>
+      <li>Pages use real headings and landmarks, and the main pages start
+      with a "Skip to content" link.</li>
+      <li>A clear outline shows which link or button has keyboard focus.</li>
+      <li>The site follows your device's light or dark setting.</li>
+      <li>It works with Windows contrast themes.</li>
+      <li>Text reflows on a screen 320 pixels wide and when zoomed to 200%,
+      with no sideways scrolling.</li>
+      <li>Text contrast is at least 6.9 to 1 in both light and dark.</li>
+      <li>Links inside text are underlined, so colour is never the only
+      sign.</li>
+      <li>Contact is by email, and every address is written out so you can
+      copy it.</li>
+      <li>The contact section says how to say our name, and the brand kit
+      says how to write it.</li>
+    </ul>
+
+    <h2>What is not perfect</h2>
+    <ul>
+      <li>The name at the top of the home page is an image, with a text
+      alternative.</li>
+      <li>The logo files in the brand kit are images, each with a text
+      description.</li>
+      <li>This site has been checked in Chrome at phone, tablet and desktop
+      widths, in light, dark and contrast themes. It has not been
+      independently audited.</li>
+    </ul>
+
+    <h2>Tell us</h2>
+    <p>If something on this site is hard to use, email
+    <a href="mailto:hello@aibhlinn.ai?subject=Accessibility">hello@aibhlinn.ai</a>
+    with Accessibility in the subject.</p>
+  </div>
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <p class="promise">No ads. No tracking. No selling your data. Ever.</p>
+    <p>This site sets no cookies and has no analytics.</p>
+    <div class="foot-groups">
+      <nav aria-labelledby="foot-site">
+        <h2 class="foot-label" id="foot-site">This website</h2>
+        <ul class="foot-list">
+          <li><a href="privacy.html">Privacy</a></li>
+          <li><a href="terms.html">Website terms</a></li>
+          <li><a href="accessibility.html" aria-current="page">Accessibility</a></li>
+          <li><a href="brand.html">Brand kit</a></li>
+          <li><a href="./#contact">Contact</a></li>
+        </ul>
+      </nav>
+      <nav aria-labelledby="foot-pt">
+        <h2 class="foot-label" id="foot-pt">Pie Timers</h2>
+        <ul class="foot-list">
+          <li><a href="https://pietimers.aibhlinn.ai/">Open Pie Timers</a></li>
+          <li><a href="https://play.google.com/store/apps/details?id=ai.aibhlinn.pietimers">Pie Timers on Google Play</a></li>
+          <li><a href="https://pietimers.aibhlinn.ai/pricing.html">Pie Timers pricing</a></li>
+          <li><a href="https://pietimers.aibhlinn.ai/privacy.html">Pie Timers Privacy Policy</a></li>
+          <li><a href="https://pietimers.aibhlinn.ai/terms.html">Pie Timers Terms of Service</a></li>
+          <li><a href="https://pietimers.aibhlinn.ai/terms.html#refunds">Pie Timers Refund Policy</a></li>
+          <li><a href="https://pietimers.aibhlinn.ai/privacy.html#delete">Delete your Pie Timers account</a></li>
+        </ul>
+      </nav>
+      <!-- Plain links only. An embedded feed or share button would load the
+           platform's tracking code onto this page and break the promise
+           above. rel="me" says these accounts belong to this site. -->
+      <nav aria-labelledby="foot-else">
+        <h2 class="foot-label" id="foot-else">Elsewhere</h2>
+        <ul class="foot-list">
+          <li><a href="https://www.instagram.com/aibhlinnai/" rel="me noopener">Instagram</a></li>
+          <li><a href="https://www.facebook.com/profile.php?id=61594621506691" rel="me noopener">Facebook</a></li>
+          <li><a href="https://discord.gg/QBrc9UkZpZ" rel="me noopener">Discord</a></li>
+          <li><a href="https://github.com/AibhlinnAI" rel="me noopener">GitHub</a></li>
+        </ul>
+      </nav>
+    </div>
+    <p class="fine">© AibhlínnAI · ABN&nbsp;70&nbsp;810&nbsp;791&nbsp;817 · South Australia</p>
+  </div>
+</footer>
+</body>
+</html>

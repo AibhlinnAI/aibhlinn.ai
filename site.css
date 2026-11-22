@@ -97,8 +97,7 @@
 }
 
 *,*::before,*::after{ box-sizing:border-box; }
-html{ -webkit-text-size-adjust:100%; scroll-behavior:smooth; }
-@media (prefers-reduced-motion: reduce){ html{ scroll-behavior:auto; } }
+html{ -webkit-text-size-adjust:100%; }
 body{
   margin:0;
   background:var(--bg);
@@ -118,15 +117,25 @@ h3{ font-size:1.25rem; }
 p{ margin:0 0 1em; }
 code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:.92em; }
 
-.wrap{ max-width:var(--wrap); margin:0 auto; padding:0 var(--gutter); }
+/* The gutter never sits under a phone's notch or rounded corner. */
+.wrap{
+  max-width:var(--wrap); margin:0 auto;
+  padding-left:max(var(--gutter), env(safe-area-inset-left));
+  padding-right:max(var(--gutter), env(safe-area-inset-right));
+}
 .narrow{ max-width:720px; }
 
+/* Parked above the page with a transform, not a negative top, so it
+   stays out of sight however tall it grows when text is enlarged. It
+   always lands on navy, so its focus ring is the light one. */
 .skip{
-  position:absolute; left:16px; top:-60px; z-index:10;
+  --focus:var(--ti-hi);
+  position:absolute; left:16px; top:16px; z-index:10;
+  transform:translateY(-250%);
   background:var(--ti-hi); color:var(--navy);
   padding:10px 16px; border-radius:10px; font-weight:600;
 }
-.skip:focus{ top:16px; }
+.skip:focus{ transform:none; }
 
 /* ───────────────────────── Hero, always navy ───────────────────────── */
 
@@ -139,14 +148,26 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
   color:var(--ti-upper);
   padding-bottom:clamp(48px, 8vw, 96px);
 }
+/* On a narrow screen the links drop under the mark and wrap as whole
+   items. No label ever breaks inside itself, and every link is at
+   least 44px tall. */
 .bar{
-  display:flex; align-items:center; justify-content:space-between; gap:16px;
+  display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:8px 16px;
   padding-top:16px; padding-bottom:16px;
 }
-.bar .brand{ display:inline-flex; border-radius:10px; }
+.bar .brand{
+  display:inline-flex; flex:none; align-items:center; gap:10px; min-height:44px;
+  border-radius:10px; text-decoration:none;
+}
 .bar .brand img{ width:40px; height:40px; border-radius:10px; }
-.nav-links{ display:flex; gap:clamp(12px, 3vw, 28px); list-style:none; margin:0; padding:0; }
-.nav-links a{ color:var(--ti-upper); text-decoration:none; font-weight:500; font-size:.98rem; padding:6px 2px; }
+.nav-links{
+  display:flex; flex-wrap:wrap; justify-content:flex-start; gap:0 clamp(8px, 2.5vw, 24px);
+  list-style:none; margin:0; padding:0;
+}
+.nav-links a{
+  display:inline-flex; align-items:center; min-height:44px; padding:0 4px; white-space:nowrap;
+  color:var(--ti-upper); text-decoration:none; font-weight:500; font-size:.98rem;
+}
 .nav-links a:hover{ color:var(--ti-hi); text-decoration:underline; }
 
 .hero-body{ text-align:center; padding-top:clamp(8px, 3vw, 24px); }
@@ -198,7 +219,7 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
 .section + .section{ border-top:1px solid var(--line); }
 .eyebrow{
   margin:0 0 6px; color:var(--muted);
-  font-size:.82rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+  font-size:.875rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
 }
 .intro{ max-width:60ch; color:var(--ink); }
 .intro + .app-card{ margin-top:20px; }
@@ -219,7 +240,9 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
 .app-tile svg{ width:clamp(112px, 22vw, 168px); height:auto; filter:drop-shadow(0 8px 18px rgba(0,0,0,.4)); }
 .app-body{ padding:clamp(22px, 4vw, 40px); }
 .app-body h3{ font-size:clamp(1.5rem, 1.2rem + 1vw, 1.9rem); margin-bottom:.2em; }
-.app-tagline{ font-style:italic; color:var(--muted); margin-bottom:1em; }
+/* Upright on purpose: no italic font file is shipped, so an italic
+   here would be one the browser fakes by slanting the upright. */
+.app-tagline{ font-style:normal; font-weight:500; color:var(--muted); margin-bottom:1em; }
 
 .ticks{ list-style:none; margin:0 0 24px; padding:0; display:grid; gap:12px; }
 .ticks li{ position:relative; padding-left:30px; }
@@ -242,7 +265,7 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
 /* Promise cards */
 .grid{ display:grid; gap:18px; margin-top:28px; grid-template-columns:1fr; }
 @media (min-width:640px){ .grid--four{ grid-template-columns:repeat(2, 1fr); } }
-@media (min-width:760px){ .grid:not(.grid--four){ grid-template-columns:repeat(3, 1fr); } }
+@media (min-width:900px){ .grid:not(.grid--four){ grid-template-columns:repeat(3, 1fr); } }
 .card{
   background:var(--surface); border:1px solid var(--line);
   border-radius:var(--radius); padding:clamp(20px, 3vw, 28px);
@@ -256,7 +279,7 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
 
 /* Brand kit */
 .kit{ display:grid; gap:18px; margin:28px 0 24px; grid-template-columns:1fr; }
-@media (min-width:640px){ .kit{ grid-template-columns:2fr 1fr; } }
+@media (min-width:760px){ .kit{ grid-template-columns:2fr 1fr; } }
 .kit figure{
   margin:0; background:var(--surface); border:1px solid var(--line);
   border-radius:var(--radius); overflow:hidden; display:flex; flex-direction:column;
@@ -273,7 +296,10 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
   display:grid; grid-template-columns:48px 1fr; gap:4px 14px; align-items:center;
   background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-sm); padding:12px;
 }
-.chip{ grid-row:span 2; width:48px; height:48px; border-radius:10px; background:var(--c); border:1px solid rgba(128,136,160,.45); }
+/* Each swatch takes its colour from a class below (.chip--navy and so
+   on), never from a style attribute: the pages' Content-Security-Policy
+   blocks those. */
+.chip{ grid-row:span 2; width:48px; height:48px; border-radius:10px; border:1px solid var(--ti-shadow); }
 .chip--metal{ background:var(--titanium); }
 .swatches strong{ color:var(--heading); }
 .swatches span.use{ grid-column:2; color:var(--muted); font-size:.92rem; }
@@ -293,8 +319,6 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
 }
 .foot a{ color:var(--link); }
 .foot .promise{ color:var(--ti); font-weight:600; font-size:1.05rem; margin-bottom:.4em; }
-.foot-links{ display:flex; flex-wrap:wrap; gap:8px 22px; margin:18px 0; }
-.foot-social{ margin-top:-6px; }
 .foot .fine{ margin:0; font-size:.88rem; }
 
 /* ───────────────────────── 404 ───────────────────────── */
@@ -325,6 +349,194 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
 .grid--four .card .card-link{ margin-top:auto; padding-top:.8em; }
 
 /* Brand kit: how to say the name, given its own line so it is easy to
-   find, and spelt exactly as Mal gave it. */
+   find, and spelt exactly as the owner gave it. */
 .say{ margin:0 0 .4em; font-size:1.1rem; color:var(--ink); }
 .say strong{ color:var(--heading); letter-spacing:.02em; }
+
+/* ============================================================
+   Added for the multi-page site. New rules go here, at the end,
+   and use only the tokens declared at the top of this file.
+   ============================================================ */
+
+/* ───────────────────────── Header links on a narrow phone ───────────────────────── */
+
+/* Below 480px the four links cannot share one row with the mark. Two
+   rows of two beside the mark read more calmly than three and a stray,
+   or the mark alone on a row of its own. */
+@media (max-width:479px){
+  .nav-links{ display:grid; grid-template-columns:repeat(2, max-content); }
+}
+/* Below 400px the written name on the inner pages no longer fits beside
+   the links, so only the mark shows, as on the home page. The link's
+   aria-label still says the name. */
+@media (max-width:399px){
+  .hero--page .brand-name{ display:none; }
+}
+
+/* ───────────────────────── Jumps and reading width ───────────────────────── */
+
+/* <main> takes focus from the skip link (tabindex="-1"). It is a
+   landing place, not a control, so it shows no ring of its own. */
+main:focus{ outline:none; }
+section[id], article[id], .doc h2[id]{ scroll-margin-top:16px; }
+/* Jumps land at once, with no animated scroll. The heading you jumped
+   to is underlined so you can see where you are. */
+section:target > .wrap > h2{ text-decoration:underline; text-decoration-thickness:3px; text-underline-offset:.2em; }
+
+h1,h2,h3{ text-wrap:balance; }
+.section p, .section li, .doc p, .doc li{ max-width:68ch; }
+/* No last word left alone on a line, where the browser supports it. */
+.section p, .section li, .doc p, .doc li{ text-wrap:pretty; }
+.foot .promise{ text-wrap:balance; }
+/* Keeps a hyphenated term on one line. */
+.nb{ white-space:nowrap; }
+.section > .wrap > h3{ margin-top:1.6em; }
+
+/* Brand kit swatches (see .chip above). */
+.chip--navy{ background:var(--navy); }
+.chip--blue{ background:var(--blue-on-white); }
+
+/* ───────────────────────── Links you can hit, addresses you can copy ───────────────────────── */
+
+.card-link a, .kit figcaption a{ display:inline-flex; align-items:center; min-height:44px; }
+/* The address under an "Email us" link, written out so it can be read
+   and copied without opening an email app. */
+.addr{ display:block; font-weight:400; font-size:.92rem; color:var(--muted); overflow-wrap:anywhere; }
+.email{ overflow-wrap:anywhere; }
+
+/* ───────────────────────── Promise band, always navy ───────────────────────── */
+
+/* The same pairs the dark theme uses, so no new colour pair is made. */
+.section--navy{
+  background:var(--navy); color:var(--ti-upper);
+  --bg:var(--navy); --surface:var(--navy-lift); --ink:var(--ti-upper);
+  --heading:var(--ti); --muted:var(--ti-lower); --line:#1C2445;
+  --link:var(--ti-upper); --focus:var(--ti-hi);
+}
+.proof{ margin:24px 0 0; }
+
+/* ───────────────────────── Questions ───────────────────────── */
+
+.faq{ display:grid; gap:0 32px; grid-template-columns:1fr; margin-top:20px; }
+@media (min-width:760px){ .faq{ grid-template-columns:repeat(2, 1fr); } }
+.faq-item{ padding:16px 0; border-top:1px solid var(--line); }
+.faq-item h3{ font-size:1.1rem; margin-bottom:.3em; }
+.faq-item p{ margin:0; }
+
+/* ───────────────────────── Business details ───────────────────────── */
+
+.facts{
+  display:grid; grid-template-columns:max-content 1fr; gap:6px 18px;
+  margin:24px 0 0; padding:18px; max-width:40rem;
+  background:var(--surface); border:1px solid var(--line); border-radius:var(--radius-sm);
+}
+.facts dt{ color:var(--muted); }
+.facts dd{ margin:0; overflow-wrap:anywhere; }
+@media (max-width:479px){
+  .facts{ grid-template-columns:1fr; gap:0; }
+  .facts dd{ margin-bottom:10px; }
+  .facts dd:last-child{ margin-bottom:0; }
+}
+
+/* ───────────────────────── Inner pages ───────────────────────── */
+
+/* brand.html, privacy.html, terms.html, accessibility.html: a plain navy
+   bar with the mark and the name, then one column of text. */
+/* The hairline keeps the bar distinct in the dark theme, where the page
+   below it is the same navy. It is the dark theme's own line colour. */
+.hero--page{ padding-bottom:0; background:var(--navy); border-bottom:1px solid #1C2445; }
+.brand-name{ color:var(--ti-upper); font-weight:600; }
+.doc{ padding:clamp(40px, 7vw, 80px) 0; }
+.doc h1{ font-size:clamp(1.9rem, 1.4rem + 2vw, 2.6rem); }
+.doc h2{ font-size:1.4rem; margin-top:2em; }
+.doc ul{ padding-left:1.25em; }
+.doc li + li{ margin-top:.4em; }
+.updated{ color:var(--muted); }
+/* The brand kit's own lists keep their grid inside .doc. */
+.doc .swatches{ padding-left:0; }
+.doc .swatches li + li{ margin-top:0; }
+.kit .art picture{ display:block; width:100%; }
+/* Each caption is two lines, the download link and then the size, so
+   the two captions match whatever the column width. */
+.kit figcaption{ flex-direction:column; }
+/* From 760px to 999px the side-by-side columns are too narrow for the
+   mark's download link and the swatch labels, so both stay stacked. */
+@media (min-width:760px) and (max-width:999px){
+  .kit, .swatches{ grid-template-columns:1fr; }
+}
+/* A stacked swatch is as wide as the logo above it, not a line of text. */
+.doc .swatches li{ max-width:none; }
+
+/* ───────────────────────── Footer link groups ───────────────────────── */
+
+/* Each list sits inside a <nav>, where Safari keeps list semantics even
+   with list-style:none. */
+.foot-groups{ display:grid; gap:8px 32px; margin:22px 0; grid-template-columns:1fr; }
+/* The Pie Timers list has the longest links, so its column is wider. */
+@media (min-width:640px){ .foot-groups{ grid-template-columns:1fr 1.6fr 1fr; } }
+.foot-label{
+  margin:12px 0 2px; color:var(--ti-lower);
+  font-size:.875rem; font-weight:600; letter-spacing:.08em; text-transform:uppercase;
+}
+.foot-list{ list-style:none; margin:0; padding:0; }
+.foot-list a{ display:inline-flex; align-items:center; min-height:44px; }
+
+/* ───────────────────────── 404, additions ───────────────────────── */
+
+.lost-page{ background:var(--navy); }
+.lost-links{ list-style:none; display:flex; flex-wrap:wrap; justify-content:center; gap:0 20px; padding:0; margin:20px 0 0; }
+.lost-links a{ display:inline-flex; align-items:center; min-height:44px; }
+.lost .fine{ text-align:center; color:var(--ti-lower); padding-bottom:24px; }
+/* The same size as the footer's fine line on every other page. The line
+   has its own bottom padding, so the hero's is not needed under it. */
+.lost .fine{ font-size:.88rem; }
+.lost{ padding-bottom:0; }
+
+/* ───────────────────────── Contrast themes ───────────────────────── */
+
+/* A contrast theme repaints backgrounds, which would blank the brand
+   swatches and the pie bullets. The swatches keep their real colours,
+   because showing them is their whole job. The bullets become rings. */
+@media (forced-colors: active){
+  .chip{ forced-color-adjust:none; border:1px solid CanvasText; }
+  .ticks li::before{ background:none; box-shadow:none; border:2px solid CanvasText; }
+  .btn-primary, .btn-metal{ border-width:2px; }
+}
+
+/* ───────────────────────── Print ───────────────────────── */
+
+/* Paper is light whatever the screen is set to: dark ink, no navy
+   bands, and each outside link followed by its address. */
+@media print{
+  :root{
+    color-scheme:light;
+    --bg:#F4F6FA; --surface:#FFFFFF; --ink:#141A33;
+    --heading:var(--blue-on-white); --muted:#4B5470; --line:#D9DEE8;
+    --link:var(--blue-on-white); --focus:var(--blue-on-white);
+    --btn-bg:var(--blue-on-white); --btn-fg:#FFFFFF; --btn-line:var(--blue-on-white);
+    --shadow:0 1px 2px rgba(5,8,24,.06), 0 10px 30px rgba(5,8,24,.08);
+  }
+  .hero, .foot, .section--navy{
+    --bg:#F4F6FA; --ink:#141A33;
+    --heading:var(--blue-on-white); --link:var(--blue-on-white);
+    --muted:#4B5470; --surface:#FFFFFF; --line:#D9DEE8;
+    background:none; color:var(--ink);
+  }
+  .tagline{ background:none; -webkit-text-fill-color:currentColor; color:var(--blue-on-white); }
+  .lede, .foot, .foot .promise, .brand-name{ color:var(--ink); }
+  .foot-label{ color:var(--muted); }
+  .skip, .nav-links{ display:none; }
+  /* Backgrounds do not print, so a filled button would be pale text on
+     white. In the page body a button prints as a plain underlined link
+     on its own line, with its address after it. */
+  .btn{ background:none; color:var(--blue-on-white); border-color:currentColor; box-shadow:none; }
+  main .actions{ display:block; }
+  main .btn{ display:block; min-height:0; padding:0; margin-top:.4em; border:0; border-radius:0; text-decoration:underline; }
+  .hero-logo{ max-width:320px; }
+  .hero-logo img{ -webkit-mask-image:none; mask-image:none; border-radius:12px; }
+  .card, .app-card, .next, .kit figure, .swatches li, .faq-item, .facts{ break-inside:avoid; box-shadow:none; }
+  h2, h3{ break-after:avoid; }
+  .section{ padding:24px 0; }
+  .chip, .app-tile, .kit .art, .ticks li::before{ print-color-adjust:exact; -webkit-print-color-adjust:exact; }
+  main a[href^="http"]::after{ content:" (" attr(href) ")"; font-weight:400; overflow-wrap:anywhere; }
+}
