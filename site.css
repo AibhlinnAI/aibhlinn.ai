@@ -255,6 +255,32 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
 }
 @media (prefers-color-scheme: dark){ .ticks li::before{ box-shadow:0 0 0 2.5px #4A6B56; } }
 
+/* Black Friday Launch Offer, inside the Pie Timers card. Temporary. Its
+   HTML is taken out of index.html by .github/workflows/retire-offer.yml
+   when the offer closes. These rules then style nothing and can be
+   deleted whenever someone is next here: no date forces it. The borders
+   are real borders, so the block keeps its outline in forced-colors mode. */
+.offer{
+  margin:0 0 24px; padding:18px clamp(16px, 3vw, 22px);
+  background:var(--bg); border:1px solid var(--line);
+  border-left:6px solid var(--pt-orange); border-radius:var(--radius-sm);
+  scroll-margin-top:16px;
+}
+.offer h4{
+  margin:0 0 4px; color:var(--muted);
+  font-size:.82rem; font-weight:600; letter-spacing:.12em; text-transform:uppercase;
+}
+.offer-hook{
+  margin:0 0 .4em; color:var(--heading);
+  font-size:clamp(1.3rem, 1.1rem + 1vw, 1.6rem); font-weight:700;
+  line-height:1.2; letter-spacing:-.012em;
+}
+.offer p{ margin-bottom:.7em; }
+.offer p:last-child{ margin-bottom:0; }
+/* The same offer, one line in the navy hero. */
+.hero-offer{ max-width:52ch; margin:0 auto 28px; color:var(--ti-upper); font-size:1rem; }
+.hero-offer a{ font-weight:600; }
+
 .next{
   margin-top:28px; padding:22px clamp(20px, 4vw, 32px);
   border:1.5px dashed var(--line); border-radius:var(--radius);
