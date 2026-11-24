@@ -80,7 +80,7 @@ the page ground and the card ground, so its pairs are measured too.
 | File | What it is |
 | --- | --- |
 | `index.html` | The home page |
-| `services.html` | The services page. It mirrors the services page of the LinkedIn company page (see Keeping in step with LinkedIn): the short description, the four "What we do" cards, the seven services provided, where we work, "Contact us for pricing", four examples of our work, and three links. No price. Its one date is the month of a past event, in a caption, not a launch or offer date |
+| `services.html` | The services page. It mirrors the services page of the LinkedIn company page (see Keeping in step with LinkedIn): the short description, the four "What we do" cards, the eight services provided, where we work, "Contact us for pricing", four examples of our work, and three links. No price. Its one date is the month of a past event, in a caption, not a launch or offer date |
 | `work/` | The four work samples shown on `services.html`, copied unchanged from the files on LinkedIn, except the phone program, which the owner replaced on 22 November 2026 with a shorter crop (824 × 1830) that ends after the first session: three screenshots (PNG, 249 KB, 312 KB and 171 KB), one video (MP4, 25 seconds, no sound, 4.2 MB) and the video's poster (PNG, 408 KB). `services.html` states each size and each picture's width and height. Change the text if a file changes |
 | `brand.html` | The brand kit: logo downloads, colours, how to say and write the name, a short description to copy |
 | `privacy.html` | Privacy notice for this website. A draft no lawyer has read (see Legal pages) |
@@ -201,7 +201,8 @@ changes, change the other:
   invoiced too, unless you are able to provide agreeable accommodation."
   is the same rule on `index.html`, on `services.html` and in `llms.txt`.
   The owner reworded it on 24 November 2026: LinkedIn must say the same
-- the seven "Services provided" on `services.html` are LinkedIn's list
+- the eight "Services provided" on `services.html` are LinkedIn's list
+  (IT Consulting was added on both on 24 November 2026),
   without Web Design and Web Development, which the owner took off on
   22 November 2026 because we do not offer them: take them off LinkedIn
   too
