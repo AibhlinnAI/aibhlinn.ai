@@ -91,7 +91,7 @@
       "@id": "https://aibhlinn.ai/services.html#automation-service",
       "name": "AI and automation consultancy",
       "serviceType": "AI and automation consultancy",
-      "url": "https://aibhlinn.ai/services.html#automation",
+      "url": "https://aibhlinn.ai/ai-automation.html",
       "description": "Practical support to identify and implement automation strategies in the work your organisation routinely takes on. Consultancy may lead to a small pilot, or implementation with immediate effect where we agree this would be appropriate in your situation.",
       "provider": {
         "@id": "https://aibhlinn.ai/#organisation"
@@ -140,10 +140,8 @@
      pricing lines, and the titles and descriptions of the four examples
      and three links are the owner's words:
      change them there and here together.
-     The block that starts at the h2 with id="automation", "How an
-     AI and automation project runs", down to "Services provided", is
-     site-only. It is not from LinkedIn, and the owner approved its wording on
-     24 November 2026. The page head with its breadcrumb is site-only too.
+     How an AI and automation project runs is on ai-automation.html, not
+     here. The page head with its breadcrumb is site-only.
      This is the one page with a video, so its Content-Security-Policy
      also has media-src 'self', and the deploy guard allows the video tag
      here and nowhere else. Keep the whole video tag on one line, written
@@ -164,6 +162,7 @@
     <ul class="nav-links">
       <li><a href="./#what-we-do">What we do</a></li>
       <li><a href="services.html" aria-current="page">Services</a></li>
+      <li><a href="ai-automation.html">AI and automation</a></li>
       <li><a href="./#pie-timers">Pie Timers</a></li>
       <li><a href="./#promise">Promise</a></li>
       <li><a href="./#contact">Contact</a></li>
@@ -227,7 +226,8 @@
         <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v3M12 18v3M3 12h3M18 12h3M5.6 5.6l2.1 2.1M16.3 16.3l2.1 2.1M5.6 18.4l2.1-2.1M16.3 7.7l2.1-2.1"/><circle cx="12" cy="12" r="3"/></svg></div>
         <h3>AI and automation consultancy</h3>
         <p>Practical support to identify and implement automation strategies in the work your organisation routinely takes on. Consultancy may lead to a small pilot, or implementation with immediate effect where we agree this would be appropriate in your situation.</p>
-        <p class="card-link"><a href="mailto:hello+consult@aibhlinn.ai?subject=AI%20and%20automation">Ask us about AI and automation</a><span class="addr">hello+consult@aibhlinn.ai</span></p>
+        <p class="card-link"><a href="ai-automation.html">How we work together</a></p>
+        <p class="card-link card-link--second"><a href="mailto:hello+consult@aibhlinn.ai?subject=AI%20and%20automation">Ask us about AI and automation</a><span class="addr">hello+consult@aibhlinn.ai</span></p>
       </div>
       <div class="card">
         <div class="icon" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20s-7.5-4.6-7.5-10A4.3 4.3 0 0 1 12 7.6 4.3 4.3 0 0 1 19.5 10c0 5.4-7.5 10-7.5 10z"/></svg></div>
@@ -237,71 +237,6 @@
         <p class="card-link"><a href="mailto:hello+advocacy@aibhlinn.ai?subject=Neurodivergence%20advocacy">Ask us about advocacy</a><span class="addr">hello+advocacy@aibhlinn.ai</span></p>
       </div>
     </div>
-
-    <!-- This section is ours, not LinkedIn's. It says how a project runs
-         and what we commit to. It names no client, number or result, and
-         says nothing about our own tools. The four steps are the same as
-         on index.html#automation, and the deploy guard checks that they
-         match: change them together. "Privacy guardrails and risk mitigation" must stay true
-         to privacy.html, and must never say what we may do with a
-         client's work: section 6 of terms.html is the only place for
-         that. -->
-    <h2 id="automation">How an AI and automation project runs</h2>
-    <p>AibhlínnAI gives organisations practical support to identify and implement automation strategies in the work they routinely take on.</p>
-    <ol class="steps" role="list">
-      <li>
-        <h3>Identify the time-consuming tasks</h3>
-        <p>You tell us about the tasks that take up time in your organisation. Together we choose one as a candidate for automation that is small, repeated and easy to check.</p>
-      </li>
-      <li>
-        <h3>Implement new time-efficient processes</h3>
-        <p>We set up the necessary structures and guardrails for that one task, either under a pilot or in some cases with immediate effect. Other work carries on as usual.</p>
-      </li>
-      <li>
-        <h3>Assess the new processes' effectiveness</h3>
-        <p>You see the new processes working on that task. We tell you plainly what worked and what did not, and make further recommendations to benefit your organisation.</p>
-      </li>
-      <li>
-        <h3>You decide</h3>
-        <p>For pilots, nothing is rolled out until you have seen the new processes in action, received our recommendations and chosen to go ahead. If the pilot did not help, we will say so.</p>
-      </li>
-    </ol>
-
-    <div class="fit">
-      <div class="card">
-        <h3>Privacy guardrails and risk mitigation</h3>
-        <ul class="card-list">
-          <li>Before we start a project, we will agree with you about the
-          information that will be used.</li>
-          <li>We will name the services that will handle your information.
-          Our own <a href="privacy.html">privacy notice</a> does the
-          same.</li>
-          <li>We will use sample data, not real records about real people,
-          unless we have an agreement to the contrary with you in place
-          beforehand.</li>
-          <li>We design each project so that a person checks each
-          result.</li>
-        </ul>
-      </div>
-      <div class="card">
-        <h3>What you get</h3>
-        <ul class="card-list">
-          <li>A project on one task, which you can try for yourself.</li>
-          <li>A plain language explanation of what the project covers, what
-          the project does not, and what the project needs from your
-          people.</li>
-          <li>A straight answer on whether going further is worthwhile.</li>
-          <li>We do not make savings promises in advance. Our partnership
-          in your project is how we find what works for your
-          organisation.</li>
-        </ul>
-      </div>
-    </div>
-    <p>We will tell you when automation is the wrong tool. Lists on our
-    home page cover <a href="./#automation">what suits automation, and what does not</a>.</p>
-    <p>Our <a href="#examples">work examples</a> on this page are from
-    events and from our own app.</p>
-    <p class="card-link"><a href="mailto:hello+consult@aibhlinn.ai?subject=AI%20and%20automation">Ask us about AI and automation</a><span class="addr">hello+consult@aibhlinn.ai</span></p>
 
     <h2 id="services-provided">Services provided</h2>
     <!-- The eight services, the availability line and the pricing line
@@ -437,6 +372,7 @@
         <h2 class="foot-label" id="foot-site">This website</h2>
         <ul class="foot-list">
           <li><a href="services.html" aria-current="page">Services</a></li>
+          <li><a href="ai-automation.html">AI and automation</a></li>
           <li><a href="privacy.html">Privacy</a></li>
           <li><a href="terms.html">Website terms</a></li>
           <li><a href="accessibility.html">Accessibility</a></li>

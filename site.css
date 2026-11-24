@@ -697,7 +697,7 @@ h4{ color:var(--heading); font-size:1.1rem; font-weight:620; letter-spacing:-.01
 }
 .hero-facts li{ padding:0 16px; text-wrap:balance; }
 .hero-facts strong{ display:block; color:var(--ti-upper); font-weight:600; text-wrap:balance; }
-/* The third fact is a link to "How an AI and automation project runs".
+/* The third fact is a link to the AI and automation page.
    It keeps the strip's own colours, both already measured on the hero,
    and is underlined so colour is not the only sign. */
 .hero-facts a{ display:block; min-height:44px; color:inherit; border-radius:8px; }
@@ -854,3 +854,13 @@ h3.faq-group:target{ text-decoration:underline; text-decoration-thickness:3px; t
   .steps li{ break-inside:avoid; box-shadow:none; }
   .steps li::before, .card .icon{ print-color-adjust:exact; -webkit-print-color-adjust:exact; }
 }
+
+/* ai-automation.html: a label above a heading, and headings stacked inside
+   one card or under a sub-heading. */
+.doc .eyebrow{ margin-top:3em; margin-bottom:0; }
+.doc .eyebrow + h2{ margin-top:.4em; }
+.doc .fit .card h4{ font-size:1.2rem; margin-bottom:.35em; }
+.doc .fit .card h4:not(:first-child){ margin-top:1.1em; }
+.doc h3[id]{ margin-top:2em; font-size:1.45rem; scroll-margin-top:16px; }
+.doc h3[id] + h4, .doc p + h4{ margin-top:1.3em; }
+.doc > .wrap > h4{ font-size:1.15rem; margin-bottom:.3em; }

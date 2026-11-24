@@ -276,8 +276,8 @@ jobs:
       # but 404.html has one data block, whose page name is the title and
       # whose address is the canonical one. A page with a "Last updated"
       # date shows the same date in its data and in the sitemap. The steps
-      # of an automation project are written out on index.html and
-      # services.html, must be on both, and must say the same thing.
+      # of an automation project are written out once, on
+      # ai-automation.html, and on no other page.
       # Every sitemap address has a date, and no date is in the future.
       - name: Check the files for search engines and AI assistants
         run: |
@@ -409,10 +409,8 @@ jobs:
               m = re.search(r'<ol class="steps"[^>]*>(.*?)</ol>', text, re.S)
               if m:
                   steps[p.name] = words(m.group(1))
-          if sorted(steps) != ['index.html', 'services.html']:
-              errors.append('the steps of an automation project must be on index.html and services.html, and only there: found on ' + (', '.join(sorted(steps)) or 'no page'))
-          if len(set(steps.values())) > 1:
-              errors.append('the steps of an automation project differ between ' + ' and '.join(sorted(steps)))
+          if sorted(steps) != ['ai-automation.html']:
+              errors.append('the steps of an automation project must be on ai-automation.html, and only there: found on ' + (', '.join(sorted(steps)) or 'no page'))
 
           sitemap = root / 'sitemap.xml'
           stext = sitemap.read_text(encoding='utf-8') if sitemap.is_file() else ''

@@ -3,12 +3,16 @@
 A small static site for the bare domain `aibhlinn.ai`. Flat files at the repo
 root, no build step:
 
-- `index.html`, the home page: who AibhlínnAI is, how an AI and automation
-  project runs, a card for each app (Pie Timers so far), questions and
+- `index.html`, the home page: who AibhlínnAI is, what we do, a card for
+  each app (Pie Timers so far), questions and
   answers in two groups (AibhlínnAI Q&A, then Pie Timers Q&A), the
   no-ads promise, and a contact section with the business details.
 - `services.html`, the services page. It mirrors the services page of the
   LinkedIn company page, with examples of our work from `work/`.
+- `ai-automation.html`, everything about AI and automation consultancy,
+  once: how a project runs (the four steps), what suits automation, the
+  two project cards, and "Agents in our practice", which says how we use
+  AI agents ourselves. The home page and the Services page link here.
 - `brand.html`, the brand kit for event organisers and media.
 - `privacy.html` and `terms.html`, for this website. Pie Timers has its own,
   on its own domain.
@@ -81,14 +85,15 @@ the page ground and the card ground, so its pairs are measured too.
 | --- | --- |
 | `index.html` | The home page |
 | `services.html` | The services page. It mirrors the services page of the LinkedIn company page (see Keeping in step with LinkedIn): the short description, the four "What we do" cards, the eight services provided, where we work, "Contact us for pricing", four examples of our work, and three links. No price. Its one date is the month of a past event, in a caption, not a launch or offer date |
+| `ai-automation.html` | Everything about AI and automation consultancy, once: the four project steps, the two project cards, what suits automation, and "Agents in our practice". The steps are on this page only, and the deploy guard checks that. No client, price or date, and no real person |
 | `work/` | The four work samples shown on `services.html`, copied unchanged from the files on LinkedIn, except the phone program, which the owner replaced on 22 November 2026 with a shorter crop (824 × 1830) that ends after the first session: three screenshots (PNG, 249 KB, 312 KB and 171 KB), one video (MP4, 25 seconds, no sound, 4.2 MB) and the video's poster (PNG, 408 KB). `services.html` states each size and each picture's width and height. Change the text if a file changes |
 | `brand.html` | The brand kit: logo downloads, colours, how to say and write the name, a short description to copy |
 | `privacy.html` | Privacy notice for this website. A draft no lawyer has read (see Legal pages) |
 | `terms.html` | Terms for this website, with how we may show work we make for a client (`#work`), how to complain (`#problems`) and how to report a security problem (`#security`). A draft no lawyer has read |
 | `accessibility.html` | What has been done, what is not perfect, and how to tell us |
 | `404.html` | Served by GitHub Pages for any missing path. Root-absolute links, because it can be served at any depth. Its picture is `apple-touch-icon.png`, 25 KB, not the 191 KB mark |
-| `robots.txt`, `sitemap.xml` | `robots.txt` allows everything and names the main search and AI crawlers, so the welcome is plain. `sitemap.xml` lists the six real pages, each with a `lastmod` date: change a page's date when its words change. Never list `404.html` |
-| `llms.txt` | A plain Markdown summary for AI assistants: who we are, key facts, Pie Timers, the services, how a project runs, and links. Every line repeats something a page says: change them together. It follows the llms.txt layout: all the facts sit above the first `## ` heading, under bold labels, and each `## ` section (Pages, Pie Timers links, Elsewhere) is a list of links only. `robots.txt` points to it. No page links to it |
+| `robots.txt`, `sitemap.xml` | `robots.txt` allows everything and names the main search and AI crawlers, so the welcome is plain. `sitemap.xml` lists the seven real pages, each with a `lastmod` date: change a page's date when its words change. Never list `404.html` |
+| `llms.txt` | A plain Markdown summary for AI assistants: who we are, key facts, Pie Timers, the services, how a project runs, how we use AI agents, and links. Every line repeats something a page says: change them together. It follows the llms.txt layout: all the facts sit above the first `## ` heading, under bold labels, and each `## ` section (Pages, Pie Timers links, Elsewhere) is a list of links only. `robots.txt` points to it. No page links to it |
 | `site.css` | All styles for every page. New rules go at the end |
 | `aibhlinn-logo.png`, `aibhlinn-mark-512.png`, `aibhlinn-mark-80.png` | Copies of the files in `pie-timers-app/app/`. The two large ones are the brand-kit downloads on `brand.html`, which states their sizes (361 KB and 191 KB). Change the text if the files change |
 | `logo.webp`, `logo.jpg` | The logo re-encoded for the hero and the brand-kit preview: 9 KB and 33 KB instead of 361 KB |
@@ -170,7 +175,7 @@ They must stay in step with the Pie Timers policies in `pie-timers-app`:
   only place that says what we may do. If identifiers are removed from an
   example under that section, also remove them from `llms.txt` and from
   the CreativeWork node in the JSON-LD on `services.html`.
-- "Privacy guardrails and risk mitigation" on `services.html` says how we
+- "Privacy guardrails and risk mitigation" on `ai-automation.html` says how we
   handle a client's information in a project. It must stay true to `privacy.html`: the line
   about naming services matches section 6 there. It makes no promise
   about selling or sharing information, on purpose: `privacy.html` covers
@@ -207,9 +212,10 @@ changes, change the other:
   22 November 2026 because we do not offer them: take them off LinkedIn
   too
 
-Some text is this site's own and is not on LinkedIn: "How an AI and automation
-project runs" on `index.html` and on `services.html` (the four
-steps, what suits automation, "Privacy guardrails and risk mitigation" and "What you get"),
+Some text is this site's own and is not on LinkedIn: everything on
+`ai-automation.html` (the four steps, what suits automation, "Privacy
+guardrails and risk mitigation", "What you get" and "Agents in our
+practice"),
 the "AibhlínnAI Q&A" group on `index.html`, and `llms.txt`. They
 restate LinkedIn text in places, so check them when it changes:
 
@@ -273,8 +279,7 @@ failure stops the deploy:
   title and whose `url` is the canonical address. On a page with a
   "Last updated" date, that date, `dateModified` in the JSON-LD and the
   page's `lastmod` in `sitemap.xml` are the same. The four project steps
-  are on both `index.html` and `services.html`, and say the same on
-  both. Every sitemap entry has one `lastmod`, a real date that is not
+  are on `ai-automation.html` and on no other page. Every sitemap entry has one `lastmod`, a real date that is not
   in the future
 
 The deploy job also checks that `robots.txt`, `sitemap.xml` and `llms.txt`
@@ -348,3 +353,19 @@ link somewhere it has not been posted before.
      and Resend depend on them
 3. **Settings → Pages → Custom domain** → `aibhlinn.ai` → Save. When the DNS
    check goes green, tick **Enforce HTTPS**.
+
+## Agents in our practice
+
+The section on `ai-automation.html` that says how AibhlínnAI uses AI agents
+is the owner's own wording, approved on 25 November 2026. Before approval
+every line was checked against the business's own records.
+
+- Change a line only when the practice changes, and check the new line
+  against the records first.
+- Name no client, price or date, and no real person. Agents are described
+  by their job. One agent is named by nickname only, on the owner's choice.
+- The last block says an AI assistant reads email sent to us and that a
+  person reads and sends every reply. `privacy.html` section 5 says the
+  same: change them together.
+- Any new agent job that touches other people's personal information goes
+  into `privacy.html` before it goes on this page.
