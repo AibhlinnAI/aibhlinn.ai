@@ -313,7 +313,7 @@ jobs:
               errors.append('llms.txt is missing or does not start with "# AibhlínnAI"')
           for must in ('AibhlínnAI is a small independent AI studio from South Australia.',
                        'Aim for the gap. Simple tools to support busy minds.',
-                       'Pie Timers is a countdown visual timer shaped like a pie that gets eaten as time passes. One glance tells you where you are in your day, without doing the sums.'):
+                       'Pie Timers is a countdown visual timer that lets you know where you are in your day, without doing any sums. Our timers are shaped like a pie that gets eaten as time passes. One glance confirms for you the time elapsed since you began and time remaining to completion.'):
               if must not in ltext:
                   errors.append(f'llms.txt has lost the fixed words: {must[:50]}...')
           if re.search(r'<[a-zA-Z/!]', ltext):

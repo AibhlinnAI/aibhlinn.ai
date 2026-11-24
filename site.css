@@ -426,6 +426,8 @@ h1,h2,h3{ text-wrap:balance; }
 .faq-item{ padding:16px 0; border-top:1px solid var(--line); }
 .faq-item h3{ font-size:1.1rem; margin-bottom:.3em; }
 .faq-item p{ margin:0; }
+.faq-item p + p{ margin-top:.6em; }
+.faq-item .card-list{ margin-bottom:.4em; }
 
 /* ───────────────────────── Business details ───────────────────────── */
 
@@ -695,7 +697,7 @@ h4{ color:var(--heading); font-size:1.1rem; font-weight:620; letter-spacing:-.01
 }
 .hero-facts li{ padding:0 16px; text-wrap:balance; }
 .hero-facts strong{ display:block; color:var(--ti-upper); font-weight:600; text-wrap:balance; }
-/* The third fact is a link to "How an automation and AI project runs".
+/* The third fact is a link to "How an AI and automation project runs".
    It keeps the strip's own colours, both already measured on the hero,
    and is underlined so colour is not the only sign. */
 .hero-facts a{ display:block; min-height:44px; color:inherit; border-radius:8px; }

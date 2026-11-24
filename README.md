@@ -3,9 +3,9 @@
 A small static site for the bare domain `aibhlinn.ai`. Flat files at the repo
 root, no build step:
 
-- `index.html`, the home page: who AibhlínnAI is, how an automation and AI
+- `index.html`, the home page: who AibhlínnAI is, how an AI and automation
   project runs, a card for each app (Pie Timers so far), questions and
-  answers in two groups (about Pie Timers, then about AibhlínnAI), the
+  answers in two groups (AibhlínnAI Q&A, then Pie Timers Q&A), the
   no-ads promise, and a contact section with the business details.
 - `services.html`, the services page. It mirrors the services page of the
   LinkedIn company page, with examples of our work from `work/`.
@@ -170,8 +170,8 @@ They must stay in step with the Pie Timers policies in `pie-timers-app`:
   only place that says what we may do. If identifiers are removed from an
   example under that section, also remove them from `llms.txt` and from
   the CreativeWork node in the JSON-LD on `services.html`.
-- "Privacy and risk" on `services.html` says how we handle a client's
-  information in a pilot. It must stay true to `privacy.html`: the line
+- "Privacy guardrails and risk mitigation" on `services.html` says how we
+  handle a client's information in a project. It must stay true to `privacy.html`: the line
   about naming services matches section 6 there. It makes no promise
   about selling or sharing information, on purpose: `privacy.html` covers
   this website only, and section 6 of the terms is the only place that
@@ -197,29 +197,30 @@ changes, change the other:
   where we work, "Contact us for pricing", the four work samples and their
   captions, and the links
 - "We work remotely as standard. If you would prefer us there in person,
-  we can travel, and travel and accommodation costs are invoiced." is the
-  same sentence on `index.html` and on `services.html`. The owner added
-  "and accommodation" on 22 November 2026: LinkedIn must say the same
+  we can travel. Travel costs are invoiced. Accommodation costs are
+  invoiced too, unless you are able to provide agreeable accommodation."
+  is the same rule on `index.html`, on `services.html` and in `llms.txt`.
+  The owner reworded it on 24 November 2026: LinkedIn must say the same
 - the seven "Services provided" on `services.html` are LinkedIn's list
   without Web Design and Web Development, which the owner took off on
   22 November 2026 because we do not offer them: take them off LinkedIn
   too
 
-Some text is this site's own and is not on LinkedIn: "How an automation
-and AI project runs" on `index.html` and on `services.html` (the four
-steps, what suits automation, "Privacy and risk" and "What you get"),
-the "Questions about AibhlínnAI" group on `index.html`, and `llms.txt`. They
+Some text is this site's own and is not on LinkedIn: "How an AI and automation
+project runs" on `index.html` and on `services.html` (the four
+steps, what suits automation, "Privacy guardrails and risk mitigation" and "What you get"),
+the "AibhlínnAI Q&A" group on `index.html`, and `llms.txt`. They
 restate LinkedIn text in places, so check them when it changes:
 
 - the Service descriptions in the JSON-LD on `services.html` are the
   three "What we do" cards on that page, word for word, and `llms.txt`
   repeats them
-- the remote-work sentence also appears in the third person in "Questions
-  about AibhlínnAI" and in the FAQ data, and in the first person, as
+- the remote-work sentence also appears in the third person in "AibhlínnAI
+  Q&A" and in the FAQ data, and in the first person, as
   above, in `llms.txt`
-- `knowsAbout` in the JSON-LD on `index.html` is four topics, each a word
-  or phrase the page shows: Automation, AI, Countdown visual timers and
-  Neurodivergence. The service names are on `services.html`, as Service
+- `knowsAbout` in the JSON-LD on `index.html` is six topics the owner chose on
+  24 November 2026: Countdown visual timers, AibhlínnAI Premium, App Suite,
+  Neurodivergence, AI and Automation. The service names are on `services.html`, as Service
   nodes
 - the JSON-LD on `index.html` has one page node, typed both `WebPage` and
   `FAQPage`, with every question on the page as its `mainEntity`. The

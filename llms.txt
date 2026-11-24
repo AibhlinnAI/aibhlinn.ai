@@ -1,47 +1,47 @@
 # AibhlínnAI
 
-> AibhlínnAI is a small independent AI studio from South Australia. We build simple, calm tools for busy minds, and we help organisations make room for neurodivergent people. Our work covers apps, neuro-affirming event support, automation and AI consultancy, and neurodivergence advocacy.
+> AibhlínnAI is a small independent AI studio from South Australia. We build simple tools to support busy minds, and provide guidance to organisations to make room for neurodivergent people. Our work covers developing apps that look at the world in a different way, neuro-affirming event support, AI and automation consultancy, and neurodivergence advocacy.
 
 Tagline: Aim for the gap. Simple tools to support busy minds.
 
 **Key facts**
 
-- Name: AibhlínnAI. One word, mixed case. If you cannot type the accent, AibhlinnAI is fine.
-- Say it: AYV-leen A-I
+- Name: AibhlínnAI. One word, mixed case, never all capitals. If you cannot type the accent above the second i, AibhlinnAI is fine in bodies of text. Titles, headings and anywhere else the name is on show always keep the accent.
+- How to say the name: AYV-leen A-I
 - Business type: sole trader
 - ABN: 70 810 791 817
 - Based in: South Australia, Australia
-- How we work: We work remotely as standard. If you would prefer us there in person, we can travel, and travel and accommodation costs are invoiced.
+- Where we work: We work remotely as standard. If you would prefer us there in person, we can travel. Travel costs are invoiced. Accommodation costs are invoiced too, unless you are able to provide agreeable accommodation.
 - Pricing for services: contact for pricing, hello@aibhlinn.ai
-- Pie Timers Premium is a paid subscription. Pie Timers pricing is linked below.
+- AibhlínnAI Premium is a paid subscription. AibhlínnAI Premium pricing is linked below.
 - Enquiries: hello@aibhlinn.ai
 - App support: support@aibhlinn.ai
 - This website runs no scripts, sets no cookies, has no analytics and loads nothing from anyone else.
 
 **Pie Timers**
 
-Pie Timers is a countdown visual timer shaped like a pie that gets eaten as time passes. One glance tells you where you are in your day, without doing the sums.
+Pie Timers is a countdown visual timer that lets you know where you are in your day, without doing any sums. Our timers are shaped like a pie that gets eaten as time passes. One glance confirms for you the time elapsed since you began and time remaining to completion.
 
 - Made by AibhlínnAI.
 - Free on one device, permanently: timers, your weekly schedule, appointments, the calculator, and alerts while the app is open.
-- Runs in your browser with nothing to install, or as an Android app from Google Play.
+- Runs in your browser with nothing to install, or as an Android app on Google Play.
 - Works without an account, and offline.
-- Premium adds sync between devices, a calendar connection and alerts when the app is closed.
+- AibhlínnAI Premium adds sync between devices, a read-only calendar connection and alerts when the app is closed.
 - No ads and no third-party trackers.
-- Pie Timers is a visual aid. It is not a medical device, a clinical tool or a substitute for professional advice.
+- Pie Timers is a visual aid. Pie Timers is not a medical device, a clinical tool or a substitute for professional advice. Pie Timers should never be your only reminder for any events that have consequences from not being met.
 
 **Services**
 
-- Neuro-affirming event support: for conferences and other events we put your event program online as a live countdown visual timer. It shows on the big screens at your venue, and attendees open it on their own phones from a QR code, with nothing to install. We can also help you arrange planned breaks, times when a quiet space is open, and a printable program in plain language.
-- Automation and AI consultancy: practical help finding the work that automation can take on in your organisation. We start with a small pilot, so you can see whether it helps before anything is rolled out.
+- Neuro-affirming event support: for conferences and other events we put your event program online as a live countdown visual timer. Your program shows on the big screens at your venue, and attendees open the same program on their own phones from a QR code. As our online phone programs are hosted on a web browser, there is nothing to install and no account to make. For any attendee who would like to learn more about us, links to the AibhlínnAI and Pie Timers websites will be included in our online phone programs. We can also help you arrange planned breaks, times when a quiet space is open, and a printable program in plain language.
+- AI and automation consultancy: practical support to identify and implement automation strategies in the work your organisation routinely takes on. Consultancy may lead to a small pilot, or implementation with immediate effect where we agree this would be appropriate in your situation.
 - Neurodivergence advocacy: advocacy for access, choice and respect for neurodivergent people at work and in everyday life.
 
-**How an automation and AI project runs**
+**How an AI and automation project runs**
 
-1. Find the work. You tell us about the tasks that take up time in your organisation. Together we choose one that is small, repeated and easy to check.
-2. Run a small pilot. We set up a pilot for that one task. The rest of your work carries on as it is.
-3. See whether it helps. You see the pilot working on that task. We tell you plainly what worked and what did not.
-4. You decide. Nothing is rolled out until you have seen the pilot and chosen to go on. If the pilot did not help, we say so.
+1. Identify the time-consuming tasks. You tell us about the tasks that take up time in your organisation. Together we choose one as a candidate for automation that is small, repeated and easy to check.
+2. Implement new time-efficient processes. We set up the necessary structures and guardrails for that one task, either under a pilot or in some cases with immediate effect. Other work carries on as usual.
+3. Assess the new processes' effectiveness. You see the new processes working on that task. We tell you plainly what worked and what did not, and make further recommendations to benefit your organisation.
+4. You decide. For pilots, nothing is rolled out until you have seen the new processes in action, received our recommendations and chosen to go ahead. If the pilot did not help, we will say so.
 
 We will tell you when automation is the wrong tool.
 
@@ -52,8 +52,8 @@ We will tell you when automation is the wrong tool.
 ## Pages
 
 - [Home](https://aibhlinn.ai/): who AibhlínnAI is, what we do, Pie Timers, questions and answers, contact and business details
-- [How an automation and AI project runs](https://aibhlinn.ai/#automation): the four steps, what suits automation and what does not
-- [Services](https://aibhlinn.ai/services.html): services, privacy and risk in a pilot, what you get, and examples of our work
+- [How an AI and automation project runs](https://aibhlinn.ai/#automation): the four steps, what suits automation and what does not
+- [Services](https://aibhlinn.ai/services.html): services, privacy guardrails and risk mitigation in a project, what you get, and examples of our work
 - [Brand kit](https://aibhlinn.ai/brand.html): logo files, colours, how to say and write the name
 - [Privacy notice](https://aibhlinn.ai/privacy.html): what happens when you visit this website or email us
 - [Website terms](https://aibhlinn.ai/terms.html): terms for this website
@@ -63,7 +63,7 @@ We will tell you when automation is the wrong tool.
 
 - [Pie Timers in your browser](https://pietimers.aibhlinn.ai/)
 - [Pie Timers on Google Play](https://play.google.com/store/apps/details?id=ai.aibhlinn.pietimers)
-- [Pie Timers pricing](https://pietimers.aibhlinn.ai/pricing.html)
+- [AibhlínnAI Premium pricing](https://pietimers.aibhlinn.ai/pricing.html)
 - [Pie Timers Privacy Policy](https://pietimers.aibhlinn.ai/privacy.html)
 - [Pie Timers Terms of Service](https://pietimers.aibhlinn.ai/terms.html)
 
