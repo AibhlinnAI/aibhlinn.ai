@@ -23,13 +23,13 @@ with far less reason to break them:
   guard job in `.github/workflows/deploy.yml` scans for secrets and tracker
   domains before every publish, and a hit stops the deploy.
 - **No cookies, no analytics.** The footer says so, which makes it a promise.
-- **No prices and no dates.** Both already live in several places that must
-  move together (`CLAUDE.md`, "The launch dates live in several places").
-  This page links to `pricing.html` instead of quoting it, so it never goes
-  stale on 1 November. If you add a price or a date here, add this repo to
-  that list in `pie-timers-app/CLAUDE.md` in the same commit.
-- **No Play steering risk.** The Google Play app never links here, and this
-  page shows no prices. Keep both true.
+- **No prices and no dates.** Both live on `premium.aibhlinn.ai` (repo
+  `AibhlinnAI/premium.aibhlinn.ai`), which this page links to.
+- **No checkout here.** Paddle refused checkout on `aibhlinn.ai` on 25 Nov
+  2026, because this site describes consulting and event support. Premium is
+  sold on `premium.aibhlinn.ai`, which carries software only.
+- **No Play steering risk.** The Google Play app never links here. Keep that
+  true.
 
 ## Colours
 

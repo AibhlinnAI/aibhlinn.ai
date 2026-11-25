@@ -328,3 +328,13 @@ code{ font-family:ui-monospace, "Cascadia Mono", Consolas, monospace; font-size:
    find, and spelt exactly as Mal gave it. */
 .say{ margin:0 0 .4em; font-size:1.1rem; color:var(--ink); }
 .say strong{ color:var(--heading); letter-spacing:.02em; }
+
+/* Homepage: the Premium advert. */
+.premium-ad{
+  display:grid; gap:12px 24px; align-items:center; margin-top:24px;
+  background:var(--surface); border:1.5px solid var(--heading);
+  border-radius:var(--radius); padding:clamp(20px, 3vw, 28px);
+}
+@media (min-width:700px){ .premium-ad{ grid-template-columns:1fr auto; } }
+.premium-ad h3{ margin:0 0 .2em; }
+.premium-ad p{ margin:0; }
