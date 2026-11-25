@@ -1,0 +1,294 @@
+# ============================================================
+# Take the Black Friday Launch Offer advert off https://aibhlinn.ai
+# by itself, so nobody has to be at a keyboard on 1 January 2027.
+#
+# The page has no JavaScript, so it cannot hide its own advert. This
+# workflow edits index.html instead. In index.html the advert sits
+# between pairs of marker comments, each on a line of its own:
+#
+#   <!-- OFFER:START -->  ...  <!-- OFFER:END -->
+#       three times: the offer line in the hero, a note to maintainers
+#       above the apps section, and the offer block in the Pie Timers
+#       card
+#   <!-- FOUNDATION:START -->  ...  <!-- FOUNDATION:END -->
+#       once, inside the offer block: the Foundation paragraph
+#
+# What it does:
+#   - Before the offer closes it does nothing. The offer closes at the
+#     end of 31 December 2026 in the last time zone on Earth, which is
+#     the instant 2027-01-01T12:00:00Z, the same as FOUNDATION_CLOSES and
+#     OFFER_CLOSES in pie-timers-app. (Until 25 Nov 2026 this said
+#     Adelaide midnight, 2026-12-31T13:30:00Z, about 22 hours early.)
+#     The job reads the clock itself, in UTC. It does not trust the
+#     schedule to decide.
+#   - From that instant it deletes everything from each START marker to
+#     its END marker, markers included, commits that to main, and
+#     starts the Deploy workflow so the change is published.
+#   - Once the markers are gone there is nothing to do, and every later
+#     run ends cleanly. It is safe to run any number of times.
+#   - Run by hand (Actions tab, "Run workflow") it takes two tick boxes:
+#       force            take the WHOLE advert down now, before the
+#                        closing day
+#       foundation_only  take down ONLY the Foundation paragraph now,
+#                        for when all 100 places go early. The rest of
+#                        the advert stays until the offer closes.
+#     Run by hand with neither box ticked, it does what a scheduled run
+#     would do at that moment.
+#
+# Why it starts the Deploy workflow itself: a push made with the
+# workflow's own GITHUB_TOKEN does not trigger other workflows, so the
+# "on: push" in deploy.yml would never fire for this commit. A
+# workflow_dispatch is one of the two events GitHub does allow that
+# token to raise, and deploy.yml already accepts it ("redeploy by
+# hand"). So this job runs "gh workflow run deploy.yml", which needs
+# "actions: write". The deploy then runs exactly as it does for a
+# person, guard job included. deploy.yml is not changed.
+#
+# A scheduled workflow only runs from the default branch, so none of
+# this happens until this file is on main. GitHub also switches
+# scheduled workflows off in a repo that has had no commits for 60
+# days. If main has branch protection that refuses a push from
+# github-actions[bot], the push step fails and the run goes red: the
+# advert then stays up, which is why it is written so that nothing in
+# it goes false if it lingers: the hero line, the heading and the
+# Foundation paragraph each say which day the offer ends.
+#
+# If the closing day ever moves, change CLOSES below, the cron lines,
+# and the wording in index.html, together with pie-timers-app (its
+# CLAUDE.md, "The launch dates live in several places").
+# ============================================================
+name: Retire the launch offer advert
+
+on:
+  schedule:
+    # Cron is in UTC. The offer closes at 12:00 UTC on 1 January 2027.
+    # GitHub may start a scheduled run late or skip one, so there are
+    # many: one missed run does not matter. Outside these days nothing
+    # is scheduled at all.
+    - cron: '40 12-23 1 1 *'     # every hour from 12:40 UTC on 1 January
+    - cron: '40 * 2-3 1 *'       # every hour on 2 and 3 January
+    - cron: '40 1 4-31 1 *'      # then once a day for the rest of January
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Take the WHOLE advert down now, even before the end of 31 December 2026'
+        type: boolean
+        default: false
+      foundation_only:
+        description: 'Take down ONLY the Foundation paragraph now (all 100 places have gone)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write    # commit the edited index.html to main
+  actions: write     # start the Deploy workflow (see the note above)
+
+concurrency:
+  group: retire-offer
+  cancel-in-progress: false
+
+jobs:
+  retire:
+    name: Take the advert down if it is time
+    runs-on: ubuntu-latest
+    steps:
+      # Always main, whichever branch a hand run was started from.
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Remove the advert from index.html
+        id: remove
+        env:
+          FORCE: ${{ inputs.force }}
+          FOUNDATION_ONLY: ${{ inputs.foundation_only }}
+        run: |
+          python3 - index.html <<'PY'
+          import os
+          import sys
+          from datetime import datetime, timezone
+          from html.parser import HTMLParser
+
+          # The end of 31 December 2026 in the last time zone (UTC-12).
+          CLOSES = datetime(2027, 1, 1, 12, 0, tzinfo=timezone.utc)
+          NAMES = ('OFFER', 'FOUNDATION')
+          VOID = {'area', 'base', 'br', 'col', 'embed', 'hr', 'img', 'input',
+                  'link', 'meta', 'source', 'track', 'wbr'}
+
+          def say(message):
+              print(message, flush=True)
+
+          def output(**values):
+              """Hand results to the later steps. Outside Actions, print them."""
+              target = os.environ.get('GITHUB_OUTPUT')
+              lines = ['%s=%s' % (k, v) for k, v in values.items()]
+              if target:
+                  with open(target, 'a', encoding='utf-8') as handle:
+                      handle.write('\n'.join(lines) + '\n')
+              else:
+                  say('outputs: ' + ' '.join(lines))
+
+          def stop(message):
+              """Refuse, leaving the file exactly as it was."""
+              say('::error::' + message)
+              sys.exit(1)
+
+          def marker(name, which):
+              return '<!-- %s:%s -->' % (name, which)
+
+          def strip(lines, name):
+              """Drop every line from a START marker to its END marker, both
+              included. A marker counts only when it is alone on its line."""
+              start, end = marker(name, 'START'), marker(name, 'END')
+              kept, inside, pairs = [], 0, 0
+              for number, line in enumerate(lines, 1):
+                  bare = line.strip()
+                  if bare == start:
+                      if inside:
+                          stop('line %d: %s inside a block that is already open (opened on line %d).' % (number, start, inside))
+                      inside = number
+                      pairs += 1
+                  elif bare == end:
+                      if not inside:
+                          stop('line %d: %s with no %s before it.' % (number, end, start))
+                      inside = 0
+                  elif not inside:
+                      kept.append(line)
+              if inside:
+                  stop('%s on line %d is never closed by %s.' % (start, inside, end))
+              return kept, pairs
+
+          class Balance(HTMLParser):
+              """Every element that is opened is closed, in order. Enough to
+              catch a marker that was put around half an element."""
+              def __init__(self):
+                  super().__init__(convert_charrefs=True)
+                  self.open, self.problem = [], None
+              def handle_starttag(self, tag, attrs):
+                  if tag not in VOID:
+                      self.open.append((tag, self.getpos()[0]))
+              def handle_endtag(self, tag):
+                  if tag in VOID or self.problem:
+                      return
+                  if not self.open or self.open[-1][0] != tag:
+                      self.problem = 'line %d: </%s> does not close what is open' % (self.getpos()[0], tag)
+                  else:
+                      self.open.pop()
+
+          def unbalanced(text):
+              checker = Balance()
+              checker.feed(text)
+              checker.close()
+              if checker.problem:
+                  return checker.problem
+              if checker.open:
+                  return '<%s> opened on line %d is never closed' % checker.open[-1]
+              return None
+
+          path = sys.argv[1]
+          # RETIRE_OFFER_NOW is for rehearsing on a copy. The workflow never sets it.
+          rehearsal = os.environ.get('RETIRE_OFFER_NOW')
+          now = datetime.fromisoformat(rehearsal) if rehearsal else datetime.now(timezone.utc)
+          force = os.environ.get('FORCE', '').strip().lower() == 'true'
+          foundation_only = os.environ.get('FOUNDATION_ONLY', '').strip().lower() == 'true'
+
+          say('Now: %s. The offer closes: %s.' % (now.isoformat(), CLOSES.isoformat()))
+          if now >= CLOSES:
+              mode, why = 'all', 'the offer has closed'
+          elif force:
+              mode, why = 'all', 'asked to take the whole advert down now'
+          elif foundation_only:
+              mode, why = 'foundation', 'asked to take the Foundation paragraph down now'
+          else:
+              say('The offer is still running and nothing was forced. Nothing to do.')
+              output(mode='none', changed='false')
+              sys.exit(0)
+          say('Mode: %s (%s).' % (mode, why))
+
+          with open(path, 'rb') as handle:
+              original = handle.read().decode('utf-8')
+          lines = original.split('\n')
+
+          names = NAMES if mode == 'all' else ('FOUNDATION',)
+          kept, total = lines, 0
+          for name in names:
+              kept, pairs = strip(kept, name)
+              total += pairs
+              say('%s: %d block(s) removed.' % (name, pairs))
+          result = '\n'.join(kept)
+
+          # A marker that is not alone on its line was not matched above.
+          # Refuse to half-do the job.
+          for name in names:
+              for which in ('START', 'END'):
+                  if ('%s:%s' % (name, which)) in result:
+                      stop('%s is still in %s after removal. Put each marker on a line of its own, exactly as written.' % (marker(name, which), path))
+
+          if total == 0:
+              say('No markers left in %s. The advert is already down. Nothing to do.' % path)
+              output(mode=mode, changed='false')
+              sys.exit(0)
+
+          # The page must still be well formed. If it was before, it must be after.
+          before, after = unbalanced(original), unbalanced(result)
+          if before:
+              say('::warning::%s was not well formed before this run (%s), so the check after removal is skipped.' % (path, before))
+          elif after:
+              stop('Removing the blocks would leave %s badly formed (%s). The markers must go around whole elements. Nothing was changed.' % (path, after))
+
+          with open(path, 'wb') as handle:
+              handle.write(result.encode('utf-8'))
+          say('%s: %d line(s) removed, %d left.' % (path, len(lines) - len(kept), len(kept)))
+          output(mode=mode, changed='true')
+          PY
+
+      - name: Commit and push to main
+        if: steps.remove.outputs.changed == 'true'
+        env:
+          MODE: ${{ steps.remove.outputs.mode }}
+        run: |
+          set -eu
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add index.html
+          if [ "$MODE" = "foundation" ]; then
+            git commit -m "Advert: take down the Foundation paragraph (all 100 places taken)"
+          else
+            git commit -m "Advert: take down the Black Friday Launch Offer (closed 31 December 2026)"
+          fi
+          git push origin HEAD:main
+
+      # The safety net for a run that pushed but could not start the
+      # deploy: a later run finds no markers in the repo, looks at the
+      # live page, and publishes again if the advert is still there.
+      - name: Is the live page still showing what the repo no longer has?
+        id: live
+        if: steps.remove.outputs.mode != 'none' && steps.remove.outputs.changed != 'true'
+        env:
+          MODE: ${{ steps.remove.outputs.mode }}
+        run: |
+          set -u
+          if [ "$MODE" = "foundation" ]; then gone='FOUNDATION:START'; else gone='OFFER:START'; fi
+          if grep -q "$gone" index.html; then
+            echo "The repo still has $gone. Nothing to compare."
+            echo "stale=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if page=$(curl -fsSL --max-time 30 https://aibhlinn.ai/); then
+            if printf '%s' "$page" | grep -q "$gone"; then
+              echo "The live page still has $gone. Publishing again."
+              echo "stale=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "The live page matches the repo."
+              echo "stale=false" >> "$GITHUB_OUTPUT"
+            fi
+          else
+            echo "Could not read the live page. Leaving it for the next run."
+            echo "stale=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Publish, by starting the Deploy workflow on main
+        if: steps.remove.outputs.changed == 'true' || steps.live.outputs.stale == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run deploy.yml --ref main

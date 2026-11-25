@@ -77,6 +77,24 @@
     <p class="tagline">Aim for the gap.</p>
     <p class="lede">Apps, neuro-affirming event support, automation and AI
     consultancy, and neurodivergence advocacy.</p>
+    <!-- OFFER:START -->
+    <!-- The offer line. Nobody has to remove it. This page has no
+         JavaScript, so it cannot hide itself: a scheduled workflow,
+         .github/workflows/retire-offer.yml, deletes everything between
+         the two marker comments around it, markers included, once the
+         Black Friday Launch Offer has closed at the end of
+         31 December 2026. It does the same to the offer
+         block in the Pie Timers card. Keep each marker comment on a line
+         of its own, exactly as written, and keep whole elements between
+         them. The line opens with its closing day, so it is not false
+         if it lingers. It is about the first payment only, so it stays
+         up if the 100 Foundation places fill sooner. It has no
+         subscribe-by date, and none may be added. -->
+    <p class="hero-offer">Until the end of 31&nbsp;December&nbsp;2026:
+    <a href="#offer">Black Friday Launch Offer</a>.
+    Pay nothing until 2027. Subscribe while your free trial is running and
+    your first payment is taken from 1&nbsp;January&nbsp;2027.</p>
+    <!-- OFFER:END -->
     <div class="actions">
       <a class="btn btn-metal" href="https://pietimers.aibhlinn.ai/">Try Pie Timers free</a>
       <a class="btn btn-ghost" href="#contact">Get in touch</a>
@@ -136,10 +154,15 @@
     </div>
   </section>
 
-  <!-- Deliberately no prices and no dates. Both already live in several
-       places that must move together (see CLAUDE.md), and this page is
-       not one of them. The prices and the launch offer live on
-       premium.aibhlinn.ai only; link there instead of quoting them. -->
+  <!-- OFFER:START -->
+  <!-- While the Black Friday Launch Offer runs, this section quotes the
+       launch price and the offer's dates. Both also live in several
+       places in pie-timers-app that must move together (see its
+       CLAUDE.md and this repo's README.md). The offer block takes itself
+       down (.github/workflows/retire-offer.yml), and this note goes with
+       it. Outside an offer, link to https://premium.aibhlinn.ai instead
+       of quoting a price: README.md keeps that rule. -->
+  <!-- OFFER:END -->
   <section class="section" id="apps" aria-labelledby="apps-title">
     <div class="wrap">
       <p class="eyebrow">The <span class="name">AibhlínnAI</span> suite</p>
@@ -158,8 +181,11 @@
         <div class="app-body">
           <h3 id="pt-title">Pie Timers</h3>
           <p class="app-tagline">Some days you eat the pie. Some days the pie eats you.</p>
-          <p>Pie Timers shows how much of your day is left as a shrinking pie.
-          One glance tells you where you are, without doing the sums.</p>
+          <p>Pie Timers is a countdown visual timer that lets you know where
+          you are in your day, without doing any sums. Our timers are shaped
+          like a pie that gets eaten as time passes. One glance confirms for
+          you the time elapsed since you began and time remaining to
+          completion.</p>
           <ul class="ticks">
             <li><strong>Free on one device, permanently.</strong> Timers, your
             weekly schedule, appointments and the calculator.</li>
@@ -167,11 +193,57 @@
             can add it to your home screen if you like.</li>
             <li><strong>Premium adds the extras.</strong> Sync between devices,
             calendar connection and alerts when the app is closed.</li>
-            <li><strong>Android app now in testing.</strong> Open Pie Timers on
-            an Android phone to join the testing list.</li>
+            <li><strong>Now on Google Play.</strong> Install Pie Timers on an
+            Android phone or tablet.</li>
           </ul>
+          <!-- OFFER:START -->
+          <!-- The offer block. Nobody has to remove it. The scheduled
+               workflow .github/workflows/retire-offer.yml deletes
+               everything between the two marker comments around it,
+               markers included, once the Black Friday Launch Offer has
+               closed at the end of 31 December 2026,
+               together with the offer line in the hero. Keep each marker
+               comment on a line of its own, exactly as written, and keep
+               whole elements between them.
+
+               The Foundation paragraph has a second pair of markers of
+               its own. If all 100 Foundation places are taken sooner,
+               run the workflow by hand with "foundation_only" ticked
+               (README.md says how): it deletes that one paragraph and
+               leaves the rest, because a full Foundation does not end
+               "Pay nothing until 2027". Everything about Foundation is
+               in that one paragraph, on purpose.
+
+               The hero line, the heading and the Foundation paragraph
+               each say which day the offer ends, and nothing in the
+               block goes false if it lingers: the hook and its condition
+               are about the first payment, and that rule has no cut-off.
+               The hook has no subscribe-by date,
+               and none may be added: it is true for anyone who
+               subscribes while their free trial is running. The price
+               and dates here must match pie-timers-app (see README.md,
+               "Prices and dates"). -->
+          <aside class="offer" id="offer" aria-labelledby="offer-title">
+            <h4 id="offer-title">Black Friday Launch Offer, until 31&nbsp;December&nbsp;2026</h4>
+            <p class="offer-hook">Pay nothing until 2027</p>
+            <p>Subscribe while your free trial is running and your first
+            payment is taken from 1&nbsp;January&nbsp;2027. Every new
+            account starts with a 14-day free trial.</p>
+            <!-- FOUNDATION:START -->
+            <p>Until the end of 31&nbsp;December&nbsp;2026,
+            the first 100 people to subscribe become Foundation members
+            and lock the launch price, A$2.90&nbsp;a&nbsp;month or
+            A$19&nbsp;a&nbsp;year, for as long as their subscription stays
+            active and AibhlínnAI offers a Premium subscription. Foundation
+            closes sooner if all 100 places are taken.</p>
+            <!-- FOUNDATION:END -->
+            <p>The offer runs to the end of 31&nbsp;December&nbsp;2026.</p>
+            <p class="card-link"><a href="https://pietimers.aibhlinn.ai/foundation.html">See the Black Friday Launch Offer</a></p>
+          </aside>
+          <!-- OFFER:END -->
           <div class="actions">
             <a class="btn btn-primary" href="https://pietimers.aibhlinn.ai/">Open Pie Timers</a>
+            <a class="btn btn-ghost" href="https://play.google.com/store/apps/details?id=ai.aibhlinn.pietimers">Get it on Google Play</a>
             <a class="btn btn-ghost" href="https://premium.aibhlinn.ai/">See pricing</a>
           </div>
         </div>
