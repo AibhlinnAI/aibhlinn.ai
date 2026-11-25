@@ -7,6 +7,13 @@
 # no-ads-no-tracking promise in the footer of index.html is meant to be
 # enforced, not just stated.
 #
+# The steps after the first three are this site's own. They hold it to
+# the rest of what it promises: no JavaScript, nothing loaded from any
+# other host, no inline styles, and every page complete, with working
+# local links. The last step checks the files that search engines and AI
+# assistants read: robots.txt, llms.txt, the structured data and the
+# sitemap. README.md, "What the deploy guard checks", lists them.
+#
 # There is no build step. The files the browser runs are the files in
 # the repo. The deploy uploads the repo root minus the repo's own
 # plumbing (.git, .github, README.md).
@@ -64,6 +71,369 @@ jobs:
           fi
           echo "Every published ABN is held together."
 
+      # This site promises no JavaScript at all. The one script tag allowed
+      # is the JSON-LD data block, which is on every page except 404.html.
+      # It is data for search engines and AI assistants and never runs. It
+      # must be written exactly as <script type="application/ld+json"> to
+      # pass.
+      - name: Refuse to publish JavaScript
+        run: |
+          set -u
+          X='--exclude-dir=.git --exclude-dir=.github'
+          fail=0
+          if grep -rniE $X --include='*.html' '<script' . | grep -viE '<script type="application/ld\+json">'; then
+            echo "::error::A script tag other than the JSON-LD data block was found."
+            fail=1
+          fi
+          if grep -rniE $X --include='*.html' "[[:space:]]on[a-z]+[[:space:]]*=[[:space:]]*[\"']|javascript:" .; then
+            echo "::error::An event handler attribute or a javascript: address was found."
+            fail=1
+          fi
+          if find . -path ./.git -prune -o -path ./.github -prune -o \( -name '*.js' -o -name '*.mjs' \) -print | grep .; then
+            echo "::error::A JavaScript file was found. This site ships none."
+            fail=1
+          fi
+          if [ "$fail" -ne 0 ]; then exit 1; fi
+          echo "No JavaScript found."
+
+      # Every image, font and stylesheet comes from this repo. Ordinary
+      # <a href> links, the canonical link and the og: tags may point
+      # elsewhere, because none of them loads anything. Keep every <link>
+      # tag on one line, or the second check cannot read it. Forms and
+      # media players are refused too: contact is by email, and nothing on
+      # this site moves or plays by itself. The one exception is the
+      # work-sample video on services.html. Its tag must sit on one line
+      # and start exactly <video controls preload="none" poster="work/...">,
+      # so it shows its own controls, fetches nothing until someone presses
+      # play, and never starts or repeats by itself. Its file and poster
+      # are held to this repo by the first check here, like every image.
+      # Styles live in site.css only, because each page's
+      # Content-Security-Policy blocks inline ones.
+      - name: Refuse third-party loads, embeds and inline styles
+        run: |
+          set -u
+          X='--exclude-dir=.git --exclude-dir=.github'
+          fail=0
+          if grep -rniE $X --include='*.html' --include='*.css' "(src|srcset|poster)[[:space:]]*=[[:space:]]*[\"']?[[:space:]]*(https?:)?//|url\([[:space:]]*[\"']?[[:space:]]*(https?:)?//|@import" .; then
+            echo "::error::Something is loaded from another host, or a stylesheet is imported."
+            fail=1
+          fi
+          if grep -rniE $X --include='*.html' "<link[^>]*href[[:space:]]*=[[:space:]]*[\"']?(https?:)?//" . | grep -viE 'rel="canonical"'; then
+            echo "::error::A link tag other than the canonical one points at another host."
+            fail=1
+          fi
+          if grep -rniE $X --include='*.html' '<(iframe|embed|object|form|input|button|textarea|select|audio|base)([[:space:]>]|$)' .; then
+            echo "::error::An embed, form control, media player or base tag was found."
+            fail=1
+          fi
+          if grep -rniE $X --include='*.html' '<video([[:space:]>]|$)' . | grep -vE '^\./services\.html:[0-9]+:[[:space:]]*<video controls preload="none" poster="work/[a-z0-9-]+\.png" '; then
+            echo "::error::A video tag was found outside services.html, or it does not start <video controls preload=\"none\" poster=\"work/...png\">."
+            fail=1
+          fi
+          if grep -rniE $X --include='*.html' '<video[^>]*[[:space:]](autoplay|loop)([[:space:]=>]|$)' .; then
+            echo "::error::A video is set to start or repeat by itself."
+            fail=1
+          fi
+          if [ "$(grep -rhoiE $X --include='*.html' '<video([[:space:]>]|$)' . | wc -l)" -gt 1 ]; then
+            echo "::error::More than one video tag was found. This site has one, on services.html."
+            fail=1
+          fi
+          if grep -rniE $X --include='*.html' "<style|[[:space:]]style[[:space:]]*=" .; then
+            echo "::error::An inline style was found. Put it in site.css."
+            fail=1
+          fi
+          if [ "$fail" -ne 0 ]; then exit 1; fi
+          echo "Nothing is loaded from another host, and there are no embeds, forms or inline styles. The only media player is the one video on services.html."
+
+      - name: Check every page is complete
+        run: |
+          set -u
+          csp="<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; base-uri 'none'; form-action 'none'\">"
+          # services.html has the one video, so its policy also lets media
+          # load from this site, and from nowhere else. No other page may
+          # carry that extra permission.
+          csp_video="<meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; style-src 'self'; img-src 'self'; font-src 'self'; media-src 'self'; base-uri 'none'; form-action 'none'\">"
+          fail=0
+          need() {
+            # need FILE TEXT WHAT
+            if ! grep -qF -- "$2" "$1"; then
+              echo "::error file=$1::$1 is missing $3."
+              fail=1
+            fi
+          }
+          pages=$(find . -path ./.git -prune -o -path ./.github -prune -o -name '*.html' -print | sed 's|^\./||' | sort)
+          if [ -z "$pages" ]; then echo "::error::No pages found."; exit 1; fi
+          for f in $pages; do
+            if [ "$f" = "services.html" ]; then
+              need "$f" "$csp_video" "the Content-Security-Policy meta tag, written as on the other pages plus media-src 'self'"
+            else
+              need "$f" "$csp" "the Content-Security-Policy meta tag, written exactly as on the other pages"
+            fi
+            need "$f" '<meta name="referrer" content="no-referrer">' "the referrer meta tag"
+            need "$f" '<title>' "a title"
+            if [ "$f" = "404.html" ]; then
+              need "$f" '<meta name="robots" content="noindex">' "its noindex tag"
+            else
+              need "$f" '<meta name="description" content="' "a meta description"
+              need "$f" '<link rel="canonical" href="https://aibhlinn.ai/' "a canonical link to https://aibhlinn.ai/"
+              need "$f" 'No ads. No tracking. No selling your data. Ever.' "the footer promise"
+            fi
+          done
+          for f in privacy.html terms.html; do
+            if [ ! -f "$f" ]; then echo "::error::$f is missing."; fail=1; continue; fi
+            need "$f" 'NOT YET REVIEWED BY A LAWYER' "the comment saying no lawyer has read it"
+          done
+          if [ "$fail" -ne 0 ]; then exit 1; fi
+          echo "Every page is complete."
+
+      - name: Check structured data, local links and the sitemap
+        run: |
+          python3 - <<'PY'
+          import json, pathlib, re, sys
+
+          root = pathlib.Path('.')
+          skip = {'.git', '.github', 'site'}
+          pages = sorted(p for p in root.rglob('*.html') if not (set(p.parts) & skip))
+          errors = []
+          ids = {}
+
+          def body(p):
+              # HTML comments are notes for editors, not links.
+              return re.sub(r'<!--.*?-->', '', p.read_text(encoding='utf-8'), flags=re.S)
+
+          def ids_of(f):
+              if f not in ids:
+                  ids[f] = set(re.findall(r'\bid\s*=\s*["\']([^"\']+)["\']', body(f)))
+              return ids[f]
+
+          for p in pages:
+              text = body(p)
+              for m in re.finditer(r'<script type="application/ld\+json">(.*?)</script>', text, re.S):
+                  try:
+                      json.loads(m.group(1))
+                  except ValueError as e:
+                      errors.append(f'{p}: the JSON-LD block does not parse: {e}')
+              for attr, value in re.findall(r'\b(href|src|srcset|poster)\s*=\s*["\']([^"\']*)["\']', text):
+                  parts = [c.split()[0] for c in value.split(',') if c.split()] if attr == 'srcset' else [value.strip()]
+                  for target in parts:
+                      if re.match(r'(?i)(https?:|mailto:)', target):
+                          continue
+                      path, _, frag = target.partition('#')
+                      path = path.split('?')[0]
+                      if path == '':
+                          f = p
+                      elif path.startswith('/'):
+                          f = root / path.lstrip('/')
+                      else:
+                          f = p.parent / path
+                      if f.is_dir():
+                          f = f / 'index.html'
+                      if not f.is_file():
+                          errors.append(f'{p}: {attr}="{target}" points at a file that is not in the repo')
+                      elif frag and f.suffix == '.html' and frag not in ids_of(f):
+                          errors.append(f'{p}: {attr}="{target}" points at an id that is not in {f}')
+
+          site = 'https://aibhlinn.ai/'
+          sitemap = root / 'sitemap.xml'
+          locs = re.findall(r'<loc>\s*(.*?)\s*</loc>', sitemap.read_text(encoding='utf-8')) if sitemap.is_file() else []
+          if not locs:
+              errors.append('sitemap.xml is missing or lists nothing')
+          for loc in locs:
+              if not loc.startswith(site):
+                  errors.append(f'sitemap.xml: {loc} is not on {site}')
+                  continue
+              f = root / loc[len(site):]
+              if f.is_dir():
+                  f = f / 'index.html'
+              if not f.is_file():
+                  errors.append(f'sitemap.xml: {loc} has no file in the repo')
+              elif f.name == '404.html':
+                  errors.append('sitemap.xml must never list 404.html')
+          for p in pages:
+              rel = p.as_posix()
+              if p.name == '404.html':
+                  continue
+              url = site + (rel[:-len('index.html')] if p.name == 'index.html' else rel)
+              if url not in locs:
+                  errors.append(f'sitemap.xml does not list {url}')
+
+          for e in errors:
+              print(f'::error::{e}')
+          if errors:
+              sys.exit(1)
+          print(f'{len(pages)} pages: structured data parses, local links resolve, and the sitemap matches.')
+          PY
+
+      # robots.txt, llms.txt and the sitemap are what search engines and AI
+      # assistants read first. robots.txt must shut nobody out and must
+      # keep its Sitemap line. llms.txt must say who we are in the fixed
+      # words, link only to pages and ids that exist, and carry no markup.
+      # Structured data must make no claim the page does not show: no
+      # price, offer, rating, review, award, founder or staff fields, every
+      # FAQ question and answer must be on the page word for word, and so
+      # must every Service description. It works the other way too: every
+      # question shown on a page must be in that page's data. Every page
+      # but 404.html has one data block, whose page name is the title and
+      # whose address is the canonical one. A page with a "Last updated"
+      # date shows the same date in its data and in the sitemap. The steps
+      # of an automation project are written out once, on
+      # ai-automation.html, and on no other page.
+      # Every sitemap address has a date, and no date is in the future.
+      - name: Check the files for search engines and AI assistants
+        run: |
+          python3 - <<'PY'
+          import datetime, html, json, pathlib, re, sys
+
+          root = pathlib.Path('.')
+          site = 'https://aibhlinn.ai/'
+          errors = []
+
+          def source(p):
+              return re.sub(r'<!--.*?-->', '', p.read_text(encoding='utf-8'), flags=re.S)
+
+          def flat(s):
+              return re.sub(r'\s+', ' ', html.unescape(s)).strip()
+
+          def words(fragment):
+              return flat(re.sub(r'<[^>]+>', '', re.sub(r'<script.*?</script>', '', fragment, flags=re.S)))
+
+          robots = root / 'robots.txt'
+          rtext = robots.read_text(encoding='utf-8') if robots.is_file() else ''
+          if 'Sitemap: https://aibhlinn.ai/sitemap.xml' not in rtext:
+              errors.append('robots.txt is missing or has lost its Sitemap line')
+          if not re.search(r'(?m)^User-agent: \*\r?\nAllow: /\s*$', rtext):
+              errors.append('robots.txt must keep "User-agent: *" followed by "Allow: /"')
+          for line in rtext.splitlines():
+              if re.match(r'(?i)\s*Disallow\s*:\s*\S', line):
+                  errors.append(f'robots.txt shuts something out: {line.strip()}')
+
+          llms = root / 'llms.txt'
+          ltext = llms.read_text(encoding='utf-8').replace('\r\n', '\n') if llms.is_file() else ''
+          if not ltext.startswith('# AibhlínnAI\n'):
+              errors.append('llms.txt is missing or does not start with "# AibhlínnAI"')
+          for must in ('AibhlínnAI is a small independent AI studio from South Australia.',
+                       'Aim for the gap. Simple tools to support busy minds.',
+                       'Pie Timers is a countdown visual timer that lets you know where you are in your day, without doing any sums. Our timers are shaped like a pie that gets eaten as time passes. One glance confirms for you the time elapsed since you began and time remaining to completion.'):
+              if must not in ltext:
+                  errors.append(f'llms.txt has lost the fixed words: {must[:50]}...')
+          if re.search(r'<[a-zA-Z/!]', ltext):
+              errors.append('llms.txt must be plain Markdown, with no HTML')
+          for url in re.findall(r'\]\((.*?)\)', ltext):
+              if not url.startswith('https://'):
+                  errors.append(f'llms.txt: {url} is not a full https address')
+              elif url.startswith(site):
+                  path, _, frag = url[len(site):].partition('#')
+                  f = root / path
+                  if f.is_dir():
+                      f = f / 'index.html'
+                  if not f.is_file():
+                      errors.append(f'llms.txt: {url} has no file in the repo')
+                  elif frag and not re.search(r'\bid\s*=\s*["\']' + re.escape(frag) + r'["\']', source(f)):
+                      errors.append(f'llms.txt: {url} points at an id that is not in {f}')
+
+          banned = {'offers', 'price', 'priceCurrency', 'priceRange', 'aggregateRating', 'review',
+                    'award', 'founder', 'founders', 'employee', 'employees', 'numberOfEmployees',
+                    'foundingDate', 'makesOffer', 'hasOfferCatalog'}
+
+          def types(n):
+              t = n.get('@type', [])
+              return t if isinstance(t, list) else [t]
+
+          smap = root / 'sitemap.xml'
+          lastmod = dict(re.findall(r'<loc>\s*(.*?)\s*</loc>\s*<lastmod>\s*(.*?)\s*</lastmod>',
+                                    smap.read_text(encoding='utf-8'))) if smap.is_file() else {}
+
+          def nodes(node):
+              if isinstance(node, dict):
+                  yield node
+                  for v in node.values():
+                      yield from nodes(v)
+              elif isinstance(node, list):
+                  for v in node:
+                      yield from nodes(v)
+
+          steps = {}
+          for p in sorted(root.glob('*.html')):
+              text = source(p)
+              seen = words(text)
+              blocks = re.findall(r'<script type="application/ld\+json">(.*?)</script>', text, re.S)
+              webpages = []
+              questions = 0
+              for b in blocks:
+                  try:
+                      data = json.loads(b)
+                  except ValueError:
+                      continue   # the step above reports it
+                  for n in nodes(data):
+                      if 'WebPage' in types(n):
+                          webpages.append(n)
+                      if 'Question' in types(n):
+                          questions += 1
+                      for k in n:
+                          if k in banned:
+                              errors.append(f'{p.name}: structured data must not have a "{k}" field')
+                      if n.get('@type') == 'Question':
+                          name = flat(str(n.get('name', '')))
+                          a = n.get('acceptedAnswer')
+                          answer = flat(str(a.get('text', ''))) if isinstance(a, dict) else ''
+                          if not name or name not in seen:
+                              errors.append(f'{p.name}: the FAQ question "{name[:60]}" is not on the page word for word')
+                          if not answer or answer not in seen:
+                              errors.append(f'{p.name}: the FAQ answer to "{name[:60]}" is not on the page word for word')
+                      if n.get('@type') == 'Service':
+                          d = flat(str(n.get('description', '')))
+                          if not d or d not in seen:
+                              errors.append(f'{p.name}: the description of the service "{n.get("name", "")}" is not on the page word for word')
+              shown = text.count('class="faq-item"')
+              if shown != questions:
+                  errors.append(f'{p.name}: the page shows {shown} questions but its structured data has {questions}')
+              if p.name != '404.html':
+                  title = flat(''.join(re.findall(r'<title>(.*?)</title>', text, re.S)))
+                  canon = ''.join(re.findall(r'<link rel="canonical" href="([^"]*)">', text))
+                  stamps = re.findall(r'<p class="updated">[^<]*<time datetime="([^"]*)"', text)
+                  if len(blocks) != 1:
+                      errors.append(f'{p.name}: needs exactly one JSON-LD block, and has {len(blocks)}')
+                  if len(webpages) != 1:
+                      errors.append(f'{p.name}: its structured data needs exactly one WebPage, and has {len(webpages)}')
+                  else:
+                      w = webpages[0]
+                      if flat(str(w.get('name', ''))) != title:
+                          errors.append(f'{p.name}: the WebPage name in the structured data is not the page title')
+                      if w.get('url') != canon:
+                          errors.append(f'{p.name}: the WebPage url in the structured data is not the canonical address')
+                      if stamps:
+                          if len(stamps) != 1 or w.get('dateModified') != stamps[0] or lastmod.get(canon) != stamps[0]:
+                              errors.append(f'{p.name}: the "Last updated" date, dateModified in the structured data and lastmod in sitemap.xml must all be the same date')
+                      elif 'dateModified' in w:
+                          errors.append(f'{p.name}: the structured data has a dateModified but the page shows no "Last updated" date')
+              m = re.search(r'<ol class="steps"[^>]*>(.*?)</ol>', text, re.S)
+              if m:
+                  steps[p.name] = words(m.group(1))
+          if sorted(steps) != ['ai-automation.html']:
+              errors.append('the steps of an automation project must be on ai-automation.html, and only there: found on ' + (', '.join(sorted(steps)) or 'no page'))
+
+          sitemap = root / 'sitemap.xml'
+          stext = sitemap.read_text(encoding='utf-8') if sitemap.is_file() else ''
+          latest = datetime.datetime.now(datetime.timezone.utc).date() + datetime.timedelta(days=1)
+          for entry in re.findall(r'<url>(.*?)</url>', stext, re.S):
+              loc = ''.join(re.findall(r'<loc>\s*(.*?)\s*</loc>', entry))
+              dates = re.findall(r'<lastmod>\s*(.*?)\s*</lastmod>', entry)
+              if len(dates) != 1:
+                  errors.append(f'sitemap.xml: {loc} needs one lastmod date')
+              for d in dates:
+                  try:
+                      if datetime.date.fromisoformat(d) > latest:
+                          errors.append(f'sitemap.xml: lastmod {d} is in the future')
+                  except ValueError:
+                      errors.append(f'sitemap.xml: lastmod {d} is not a date written YYYY-MM-DD')
+
+          for e in errors:
+              print(f'::error::{e}')
+          if errors:
+              sys.exit(1)
+          print('robots.txt welcomes everyone, llms.txt is sound, and structured data claims only what the pages show.')
+          PY
+
   deploy:
     needs: guard
     runs-on: ubuntu-latest
@@ -80,6 +450,15 @@ jobs:
           mkdir -p site
           rsync -a --exclude='.git' --exclude='.github' --exclude='site' --exclude='README.md' ./ site/
 
+      - name: Check robots.txt, the sitemap and llms.txt are in the published site
+        run: |
+          test -f site/robots.txt
+          test -f site/sitemap.xml
+          test -f site/llms.txt
+          echo "robots.txt, sitemap.xml and llms.txt are in the published site."
+
+      # Stay on v3. From v4 this action leaves dot-files out of the
+      # artifact, and .nojekyll is one.
       - uses: actions/upload-pages-artifact@v3
         with:
           path: site

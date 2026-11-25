@@ -1,9 +1,26 @@
 # aibhlinn.ai, the AibhlínnAI front door
 
-A one-page static site for the bare domain `aibhlinn.ai`: who AibhlínnAI is,
-a card for each app (Pie Timers so far), the no-ads promise, a brand kit for
-event organisers and media, and a contact address. Plus a `404.html` that
-points lost visitors at Pie Timers.
+A small static site for the bare domain `aibhlinn.ai`. Flat files at the repo
+root, no build step:
+
+- `index.html`, the home page: who AibhlínnAI is, what we do, a card for
+  each app (Pie Timers so far), questions and
+  answers in two groups (AibhlínnAI Q&A, then Pie Timers Q&A), the
+  no-ads promise, and a contact section with the business details.
+- `services.html`, the services page. It mirrors the services page of the
+  LinkedIn company page, with examples of our work from `work/`.
+- `ai-automation.html`, everything about AI and automation consultancy,
+  once: how a project runs (the four steps), what suits automation, the
+  two project cards, and "Agents in our practice", which says how we use
+  AI agents ourselves. The home page and the Services page link here.
+- `brand.html`, the brand kit for event organisers and media.
+- `privacy.html` and `terms.html`, for this website. Pie Timers has its own,
+  on its own domain.
+- `accessibility.html`, a plain statement of what has been done and what is
+  not perfect.
+- `404.html`, which points lost visitors home and at Pie Timers.
+- `robots.txt`, `sitemap.xml` and `llms.txt`, for search engines and AI
+  assistants.
 
 **Home: the `AibhlinnAI/aibhlinn.ai` repo**, published by GitHub Pages
 from `.github/workflows/deploy.yml`. It was drafted in `www/` of
@@ -17,11 +34,26 @@ Same principles as the app (`ARCHITECTURE.md` §3 and §4), applied to a page
 with far less reason to break them:
 
 - **No JavaScript.** The only `<script>` is JSON-LD, which is data for search
-  engines and never runs. Nothing on the page needs code.
+  engines and AI assistants and never runs. It is on every page except
+  `404.html`. Nothing on the page needs code.
 - **No third-party requests.** The font is self-hosted (copied from
   `pie-timers-app/app/fonts/`), images are local, and there is no CDN. The
   guard job in `.github/workflows/deploy.yml` scans for secrets and tracker
   domains before every publish, and a hit stops the deploy.
+- **No style attributes and no `<style>` blocks.** Every page carries a
+  Content-Security-Policy meta tag that blocks them, along with all scripts
+  and anything from another host. Put every style in `site.css`.
+- **Links out send no referrer.** Every page carries
+  `<meta name="referrer" content="no-referrer">`, so a site we link to is not
+  told which page the visitor came from. `privacy.html` section 4 says so.
+  The trade-off is that other sites cannot see that a visit came from here.
+- **One video, and it never starts by itself.** `services.html` has the
+  site's only media player: a plain `<video controls preload="none">` with a
+  file and a poster from `work/`. Nothing is fetched until the visitor
+  presses play, it has no sound, and the page says in words what it shows.
+  That page's Content-Security-Policy has `media-src 'self'` added, and no
+  other page's does. `accessibility.html` and `privacy.html` section 3 both
+  describe the video: keep them true.
 - **No cookies, no analytics.** The footer says so, which makes it a promise.
 - **No checkout here.** Paddle refused checkout on `aibhlinn.ai` on 25 Nov
   2026, because this site describes consulting and event support. Premium is
@@ -32,8 +64,8 @@ with far less reason to break them:
   22 Nov 2026, the day Pie Timers went public on Google Play, `index.html`
   advertises the Black Friday Launch Offer. It quotes the launch price
   (A$2.90 a month or A$19 a year), the first payment date (from 1 January
-  2027), the 100 Foundation places and the closing date (the end of
-  31 December 2026). This replaces the old rule of no prices
+  2027), the 14-day free trial, the 100 Foundation places and the closing
+  date (the end of 31 December 2026). This replaces the old rule of no prices
   and no dates, which Mal overruled on 22 Nov 2026. Mal revised the offer's
   terms the same day: the hook lost its subscribe-by date, and the close
   moved from the end of 5 December to the end of 31 December.
@@ -167,22 +199,38 @@ never sets `RETIRE_OFFER_NOW`. Never rehearse on the real file.
 
 ## Colours
 
-From `pie-timers-app/brand/README.md`, never invented here. The hero and footer are always
-brand blue `#050818`, because the logo artwork has that navy baked in. The
-sections between follow the visitor's light or dark setting: blue on white
-`#2E3A63` on light, titanium `#CED1D8` (and its gradient) on dark. Pie Timers'
-own purple, green and orange appear only inside its card. Every text colour
-pair clears 6.9:1 contrast.
+From `pie-timers-app/brand/README.md`, never invented here. The hero, the
+header bar on the inner pages, the "Our promise" band and the footer are
+always brand blue `#050818`, because the logo artwork has that navy baked
+in. Everything else follows the visitor's light or dark setting: blue on
+white `#2E3A63` on light, titanium `#CED1D8` (and its gradient) on dark. Pie
+Timers' own purple, green and orange appear only inside its card. Every text
+colour pair clears 6.9:1 contrast, and `accessibility.html` says so. A new
+text colour must reuse a pair that is already measured (the promise band
+reuses the dark theme's), or that line comes off the accessibility page.
+The numerals on the project steps are white on `#2E3A63`, the light
+theme's button pair, in both themes. The navy head of the inner pages
+reuses the dark theme's pairs. An alternate section (`.section--alt`) swaps
+the page ground and the card ground, so its pairs are measured too.
 
 ## Files
 
 | File | What it is |
 | --- | --- |
-| `index.html` | The page |
-| `404.html` | Served by GitHub Pages for any missing path. Root-absolute links, because it can be served at any depth |
-| `site.css` | All styles for both pages |
-| `aibhlinn-logo.png`, `aibhlinn-mark-512.png`, `aibhlinn-mark-80.png` | Copies of the files in `pie-timers-app/app/`. The two large ones are the brand-kit downloads |
-| `logo.webp`, `logo.jpg` | The logo re-encoded for the hero: 9 KB and 33 KB instead of 361 KB |
+| `index.html` | The home page |
+| `services.html` | The services page. It mirrors the services page of the LinkedIn company page (see Keeping in step with LinkedIn): the short description, the four "What we do" cards, the eight services provided, where we work, "Contact us for pricing", four examples of our work, and three links. No price. Its one date is the month of a past event, in a caption, not a launch or offer date |
+| `ai-automation.html` | Everything about AI and automation consultancy, once: the four project steps, the two project cards, what suits automation, and "Agents in our practice". The steps are on this page only, and the deploy guard checks that. No client, price or date, and no real person |
+| `work/` | The four work samples shown on `services.html`, copied unchanged from the files on LinkedIn, except the phone program, which the owner replaced on 22 November 2026 with a shorter crop (824 × 1830) that ends after the first session: three screenshots (PNG, 249 KB, 312 KB and 171 KB), one video (MP4, 25 seconds, no sound, 4.2 MB) and the video's poster (PNG, 408 KB). `services.html` states each size and each picture's width and height. Change the text if a file changes |
+| `brand.html` | The brand kit: logo downloads, colours, how to say and write the name, a short description to copy |
+| `privacy.html` | Privacy notice for this website. A draft no lawyer has read (see Legal pages) |
+| `terms.html` | Terms for this website, with how we may show work we make for a client (`#work`), how to complain (`#problems`) and how to report a security problem (`#security`). A draft no lawyer has read |
+| `accessibility.html` | What has been done, what is not perfect, and how to tell us |
+| `404.html` | Served by GitHub Pages for any missing path. Root-absolute links, because it can be served at any depth. Its picture is `apple-touch-icon.png`, 25 KB, not the 191 KB mark |
+| `robots.txt`, `sitemap.xml` | `robots.txt` allows everything and names the main search and AI crawlers, so the welcome is plain. `sitemap.xml` lists the seven real pages, each with a `lastmod` date: change a page's date when its words change. Never list `404.html` |
+| `llms.txt` | A plain Markdown summary for AI assistants: who we are, key facts, Pie Timers, the services, how a project runs, how we use AI agents, and links. Every line repeats something a page says: change them together. It follows the llms.txt layout: all the facts sit above the first `## ` heading, under bold labels, and each `## ` section (Pages, Pie Timers links, Elsewhere) is a list of links only. `robots.txt` points to it. No page links to it |
+| `site.css` | All styles for every page. New rules go at the end |
+| `aibhlinn-logo.png`, `aibhlinn-mark-512.png`, `aibhlinn-mark-80.png` | Copies of the files in `pie-timers-app/app/`. The two large ones are the brand-kit downloads on `brand.html`, which states their sizes (361 KB and 191 KB). Change the text if the files change |
+| `logo.webp`, `logo.jpg` | The logo re-encoded for the hero and the brand-kit preview: 9 KB and 33 KB instead of 361 KB |
 | `og-image.jpg` | 1200 × 630 link-preview image (WhatsApp, LinkedIn, Teams, Discord) |
 | `favicon.ico`, `apple-touch-icon.png` | Tab and home-screen icons from the mark |
 | `CNAME`, `.nojekyll` | The custom domain, and no Jekyll processing |
@@ -203,11 +251,221 @@ convert aibhlinn-mark-512.png -strip \( -clone 0 -resize 16x16 \) \
         \( -clone 0 -resize 32x32 \) \( -clone 0 -resize 48x48 \) -delete 0 favicon.ico
 ```
 
+## Adding a page
+
+1. Copy an inner page such as `accessibility.html` and change the content
+   inside `<main>`.
+2. Keep the whole head block, in order: charset, viewport, then the three
+   policy tags (Content-Security-Policy, referrer, format-detection), then
+   the title, description, canonical, theme colour, colour scheme, the three
+   icon links, the font preload, `site.css`, and the Open Graph set. Change
+   the title, description, canonical, `og:title`, `og:description` and
+   `og:url` to the new page's. Keep each `<link>` tag on one line: the guard
+   reads them line by line.
+   Before `</head>`, add the JSON-LD block from another inner page and
+   change the page address, the `name` (the page's title) and the
+   breadcrumb name. Write the tag exactly `<script type="application/ld+json">`.
+3. Inside `<main class="doc doc--headed">`, keep the page head: the
+   `<div class="page-head">` with the breadcrumb, the `<h1>` and the first
+   paragraph. Change the breadcrumb's last item to the new page's name.
+   Keep the skip link, the header bar and the footer exactly as they are.
+   The footer is the same on every page. Put `aria-current="page"` on the
+   new page's own footer link if it has one, and on its link in the top
+   bar if it has one there.
+4. Add the page to `sitemap.xml` with a `lastmod` date, to the Pages list
+   in `llms.txt`, and to the footer of every page if visitors should find
+   it.
+5. No style attributes, no `<style>` block, no script, no form, no media
+   player, nothing loaded from another host. The guard refuses all of them.
+   The one video is on `services.html`, and the guard allows it only there.
+
+## Legal pages
+
+`privacy.html` and `terms.html` are drafts. **No lawyer has read them**, and
+each carries an HTML comment that says so, which the guard checks for. They
+say only what is true of this website, claim compliance with nothing, and
+give no legal advice. Each has a "Last updated" date: change it with any
+change to the words.
+
+They must stay in step with the Pie Timers policies in `pie-timers-app`:
+
+- `privacy.html` mirrors `app/privacy.html` sections 5, 6, 8 and 10: what
+  GitHub, Cloudflare, Google and Resend receive, how long email is kept, and
+  the 30 days to respond.
+- `terms.html` mirrors `app/terms.html` sections 6 and 12: the Australian
+  Consumer Law sentence and South Australian law.
+- The Questions section of `index.html` restates `app/terms.html` sections 2
+  to 6 and `app/privacy.html` section 9. Change them together.
+- `accessibility.html` makes claims that can be tested. If a change to the
+  site makes one untrue, fix the site or remove the line.
+- `terms.html` section 6, "Work we make for you" (`#work`), says we may use
+  what we have developed as marketing material, and that anyone identified
+  in it can ask for identifiers to be removed. It was added on 22 November
+  2026, and the owner approved its wording that day. Keep its wording and
+  its meaning exactly.
+  Section 2 of the terms, the second paragraph of `privacy.html` section 7
+  (and the last bullet of that page's short version, which points to
+  section 7), the paragraph under the examples on `services.html` and the
+  last paragraph of that page's "Get in touch" all point to it: change
+  them together. They point and do not restate, so the section stays the
+  only place that says what we may do. If identifiers are removed from an
+  example under that section, also remove them from `llms.txt` and from
+  the CreativeWork node in the JSON-LD on `services.html`.
+- "Privacy guardrails and risk mitigation" on `ai-automation.html` says how we
+  handle a client's information in a project. It must stay true to `privacy.html`: the line
+  about naming services matches section 6 there. It makes no promise
+  about selling or sharing information, on purpose: `privacy.html` covers
+  this website only, and section 6 of the terms is the only place that
+  says what we may do with a client's work. The promise "We never sell
+  your data or share it for marketing" on `index.html` stays as it is.
+- The date on each legal page is a `<time>` element. Change its
+  `datetime`, the `dateModified` in that page's JSON-LD and the page's
+  `lastmod` in `sitemap.xml` together with the visible date.
+
+## Keeping in step with LinkedIn
+
+The LinkedIn company page is `https://www.linkedin.com/company/aibhlinnai/`.
+The owner wrote its About text and its services page on 22 November 2026,
+and this site was brought into line with them that day. When either
+changes, change the other:
+
+- the hero lede, the four "What we do" cards and the Organization
+  description in the JSON-LD on `index.html`, and that page's meta and Open
+  Graph descriptions, follow the LinkedIn About text
+- the "About AibhlínnAI, to copy" paragraph on `brand.html` is the same
+  text in the third person, because other people paste it
+- `services.html` follows the LinkedIn services page: its opening lines,
+  where we work, "Contact us for pricing", the four work samples and their
+  captions, and the links
+- "We work remotely as standard. If you would prefer us there in person,
+  we can travel. Travel costs are invoiced. Accommodation costs are
+  invoiced too, unless you are able to provide agreeable accommodation."
+  is the same rule on `index.html`, on `services.html` and in `llms.txt`.
+  The owner reworded it on 24 November 2026: LinkedIn must say the same
+- the eight "Services provided" on `services.html` are LinkedIn's list
+  (IT Consulting was added on both on 24 November 2026),
+  without Web Design and Web Development, which the owner took off on
+  22 November 2026 because we do not offer them: take them off LinkedIn
+  too
+
+Some text is this site's own and is not on LinkedIn: everything on
+`ai-automation.html` (the four steps, what suits automation, "Privacy
+guardrails and risk mitigation", "What you get" and "Agents in our
+practice"),
+the "AibhlínnAI Q&A" group on `index.html`, and `llms.txt`. They
+restate LinkedIn text in places, so check them when it changes:
+
+- the Service descriptions in the JSON-LD on `services.html` are the
+  three "What we do" cards on that page, word for word, and `llms.txt`
+  repeats them
+- the remote-work sentence also appears in the third person in "AibhlínnAI
+  Q&A" and in the FAQ data, and in the first person, as
+  above, in `llms.txt`
+- `knowsAbout` in the JSON-LD on `index.html` is six topics the owner chose on
+  24 November 2026: Countdown visual timers, AibhlínnAI Premium, App Suite,
+  Neurodivergence, AI and Automation. The service names are on `services.html`, as Service
+  nodes
+- the JSON-LD on `index.html` has one page node, typed both `WebPage` and
+  `FAQPage`, with every question on the page as its `mainEntity`. The
+  ABN is there twice on purpose: as `taxID`, and as an `identifier`
+  labelled "ABN". Never add an ABN register address to `sameAs`
+
+LinkedIn is linked from the footer of every page, listed in `sameAs` in
+the JSON-LD, and named in `privacy.html` section 4. It is a plain link:
+no badge, no logo and no widget from LinkedIn.
+
+If the host changes, if email moves to another provider, or if anything
+starts counting visits, change `privacy.html` the same day.
+
+## What the deploy guard checks
+
+`.github/workflows/deploy.yml` runs these before every publish, and any
+failure stops the deploy:
+
+- no private keys or tokens, and no ad or tracking service named anywhere.
+  That search is case-insensitive and reads every file, this README
+  included, so never name such a product, even to say it is not used
+- the ABN is never written with a plain space before its digits in an HTML
+  file. Use `&nbsp;`, or put the letters and the number in separate elements
+- no JavaScript: no script tag other than the JSON-LD data block, no event
+  handler attributes, no script files
+- nothing loaded from another host, no embeds or forms, no style attributes
+  and no `<style>` blocks
+- no media player, except one video tag on `services.html`. That tag must
+  sit on one line and start exactly
+  `<video controls preload="none" poster="work/...png" `, with no `autoplay`
+  and no `loop`
+- every page has the policy tags and a title. `services.html` must have the
+  policy with `media-src 'self'` added, and every other page must have it
+  without. Every page but `404.html` has a
+  description, a canonical address and the footer promise. `404.html` has
+  `noindex`. The two legal pages have their "not reviewed" comment
+- the JSON-LD parses, every local link, image and video poster points at
+  a file that exists, and `sitemap.xml` lists every page except `404.html`
+- the files for search engines and AI assistants: `robots.txt` keeps its
+  Sitemap line and its `User-agent: *` and `Allow: /` pair, and shuts
+  nothing out. `llms.txt` exists, starts `# AibhlínnAI`, keeps the three
+  fixed sentences, has no HTML, and links only to pages and ids that
+  exist. No JSON-LD has an offer, price, rating, review, award, founder,
+  staff, founding date or offer catalogue field. Every FAQ question and
+  answer and every Service description in the JSON-LD is on its page
+  word for word, and a page shows exactly as many questions
+  (`class="faq-item"`) as its data holds. Every page but `404.html` has
+  exactly one JSON-LD block with one WebPage, whose `name` is the page
+  title and whose `url` is the canonical address. On a page with a
+  "Last updated" date, that date, `dateModified` in the JSON-LD and the
+  page's `lastmod` in `sitemap.xml` are the same. The four project steps
+  are on `ai-automation.html` and on no other page. Every sitemap entry has one `lastmod`, a real date that is not
+  in the future
+
+The deploy job also checks that `robots.txt`, `sitemap.xml` and `llms.txt`
+are in the published site.
+
+## What the host decides
+
+GitHub Pages serves these files as they are. That sets some limits:
+
+- It cannot send our own response headers, so the policy lives in meta tags
+  in each page. A meta tag cannot stop another site framing a page.
+- HTTPS is by redirect ("Enforce HTTPS"), not by an HSTS header.
+- Files are cached for 10 minutes, so there is no need for `?v=` on
+  `site.css`. A change shows within that time.
+- There are no server redirects. A page that moves needs a stub left at the
+  old address with a meta refresh and a plain link to the new one.
+- The domain is **DNS only** (grey cloud) at Cloudflare. Do not switch on the
+  Cloudflare proxy without reading `pie-timers-app/DEPLOY.md` 3.1, and change
+  `privacy.html` first: it says GitHub serves the pages and names nobody
+  else for a visit.
+
+## The offer branch is merged in
+
+The dated launch offer was built on its own branch, `launch-offer-and-play`,
+and was combined with the new site on 25 November 2026 (branch
+`site-with-advert`). It is an offer line in the hero and an offer block in
+the Pie Timers card, on the home page only, each between `OFFER:START` and
+`OFFER:END` marker comments, plus the `.offer` and `.hero-offer` rules in
+`site.css`. Nothing else on the site carries a price, a trial length or an
+offer date. The note above the `#apps` section that sits outside the
+markers is the standing rule, and stays after the advert is gone.
+
 ## Previewing
 
-Double-click `index.html`. Everything works from `file://` except the 404
-page, whose root-absolute links need a server. The link-preview tags use
-absolute `https://aibhlinn.ai/` URLs, so previews only work once it is live.
+Double-click `index.html`. Styles, images and the font all load from
+`file://` with the Content-Security-Policy in place. Two things need a
+server instead: the 404 page, whose links are root-absolute, and links to
+`./` (the mark in the header, and "Contact" in the footer), which open a
+folder listing under `file://`. To click between pages, run any static
+server in this folder, for example `python -m http.server`, and open the
+address it prints. The link-preview tags use absolute `https://aibhlinn.ai/`
+URLs, so previews only work once it is live.
+
+## After changing the title, description or image
+
+Chat apps and social sites keep their own copy of a link preview. After a
+change to a page's title, description or `og-image.jpg`, old previews stay
+until each service fetches the page again. Some offer a tool that forces a
+fresh fetch. Otherwise it takes days. Check a new preview by pasting the
+link somewhere it has not been posted before.
 
 ## Going live, once
 
@@ -224,3 +482,19 @@ absolute `https://aibhlinn.ai/` URLs, so previews only work once it is live.
      and Resend depend on them
 3. **Settings → Pages → Custom domain** → `aibhlinn.ai` → Save. When the DNS
    check goes green, tick **Enforce HTTPS**.
+
+## Agents in our practice
+
+The section on `ai-automation.html` that says how AibhlínnAI uses AI agents
+is the owner's own wording, approved on 25 November 2026. Before approval
+every line was checked against the business's own records.
+
+- Change a line only when the practice changes, and check the new line
+  against the records first.
+- Name no client, price or date, and no real person. Agents are described
+  by their job. One agent is named by nickname only, on the owner's choice.
+- The last block says an AI assistant reads email sent to us and that a
+  person reads and sends every reply. `privacy.html` section 5 says the
+  same: change them together.
+- Any new agent job that touches other people's personal information goes
+  into `privacy.html` before it goes on this page.
