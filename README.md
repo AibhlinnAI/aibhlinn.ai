@@ -104,9 +104,9 @@ line of its own:
   the offer block: around the Foundation paragraph. Everything the advert
   says about Foundation is in that one paragraph.
 
-`.github/workflows/retire-offer.yml` runs on a schedule: every hour from
-12:40 UTC on 1 January to the end of 3 January, then once a day for the
-rest of January. Each run reads the clock itself. Before the end of
+`.github/workflows/retire-offer.yml` runs on a schedule: once at 12:05 UTC
+on 1 January, then every hour from 12:40 UTC to the end of 3 January, then
+once a day for the rest of January. Each run reads the clock itself. Before the end of
 31 December 2026 in the last time zone (the instant
 `2027-01-01T12:00:00Z`), it does nothing. From then on it deletes everything from each START marker to
 its END marker, markers included, commits that to `main` as

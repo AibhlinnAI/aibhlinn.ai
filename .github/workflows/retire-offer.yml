@@ -65,7 +65,8 @@ on:
     # GitHub may start a scheduled run late or skip one, so there are
     # many: one missed run does not matter. Outside these days nothing
     # is scheduled at all.
-    - cron: '40 12-23 1 1 *'     # every hour from 12:40 UTC on 1 January
+    - cron: '5 12 1 1 *'         # first try, 12:05 UTC on 1 January
+    - cron: '40 12-23 1 1 *'     # then every hour from 12:40 UTC on 1 January
     - cron: '40 * 2-3 1 *'       # every hour on 2 and 3 January
     - cron: '40 1 4-31 1 *'      # then once a day for the rest of January
   workflow_dispatch:
